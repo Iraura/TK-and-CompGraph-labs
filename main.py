@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 x_matrix = np.array([[1, 1, 1],
@@ -43,6 +45,19 @@ def get_syndroms(G, H):
     return G.dot(H) % 2
 
 
+# Task 2.4
+def generate_word_with_one_mistake(G):
+    u = np.zeros(len(G))
+    for i in range(len(u)):
+        u[i] = random.randint(0, 2)
+    u = u.dot(G)
+    u %= 2
+    mistake_pos = random.randint(0, 2)
+    u[mistake_pos] += 1
+    u[mistake_pos] %= 2
+    return u
+
+
 if __name__ == '__main__':
     G = G_matrix(7, 4, x_matrix)
     print("Пождающая матрица G (7,4,3):", '\n', G, '\n')
@@ -52,3 +67,6 @@ if __name__ == '__main__':
 
     S = get_syndroms(G, H)
     print("Матрица синдромов S", '\n', S, '\n')
+
+    word_with_one_mistake = generate_word_with_one_mistake(G)
+    print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
