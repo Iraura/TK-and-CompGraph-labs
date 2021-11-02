@@ -63,6 +63,7 @@ def generate_word_with_one_mistake(G):
     u[mistake_pos] %= 2
     return u
 
+
 def get_correct_word(H, sindrom, slovo):
     k = 0
     for i in range(len(H)):
@@ -71,6 +72,7 @@ def get_correct_word(H, sindrom, slovo):
     slovo[k] += 1
     slovo[k] %= 2
     return slovo
+
 
 def fist_part():
     G = G_matrix(7, 4, x_matrix_first)
@@ -94,28 +96,29 @@ def fist_part():
     test = np.dot(correct_word, H) % 2
     print("TEST", '\n', test, '\n')
 
-    def second_part():
-        G = G_matrix(11, 5, x_matrix_first)
-        print("Пождающая матрица G (11,5,5):", '\n', G, '\n')
 
-        H = H_matrix(G)
-        print("Проверочная матрица H", '\n', H, '\n')
+def second_part():
+    G = G_matrix(11, 5, x_matrix_first)
+    print("Пождающая матрица G (11,5,5):", '\n', G, '\n')
 
-        S = get_syndroms(G, H)
-        print("Матрица синдромов S", '\n', S, '\n')
+    H = H_matrix(G)
+    print("Проверочная матрица H", '\n', H, '\n')
 
-        word_with_one_mistake = generate_word_with_one_mistake(G)
-        print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
+    S = get_syndroms(G, H)
+    print("Матрица синдромов S", '\n', S, '\n')
 
-        S = get_syndroms(word_with_one_mistake, H)
-        print("синдром для кодового слова с ошибкой", '\n', S, '\n')
+    word_with_one_mistake = generate_word_with_one_mistake(G)
+    print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
 
-        correct_word = get_correct_word(H, S, word_with_one_mistake)
-        print("исправленное кодовое слово", '\n', correct_word, '\n')
+    S = get_syndroms(word_with_one_mistake, H)
+    print("синдром для кодового слова с ошибкой", '\n', S, '\n')
 
-        test = np.dot(correct_word, H) % 2
-        print("TEST", '\n', test, '\n')
+    correct_word = get_correct_word(H, S, word_with_one_mistake)
+    print("исправленное кодовое слово", '\n', correct_word, '\n')
+
+    test = np.dot(correct_word, H) % 2
+    print("TEST", '\n', test, '\n')
 
 
 if __name__ == '__main__':
-   fist_part()
+    fist_part()
