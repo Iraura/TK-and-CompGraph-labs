@@ -35,6 +35,16 @@ def H_matrix(G):
             H[i+ len(G), j] = I_n_k[i, j]
     return H
 
+    # Умножение матриц
+def mult(u, g):
+    v = np.zeros(len(g.transpose()), dtype=int)
+    for i in range(len(u)):
+        for j in range(len(g.transpose())):
+            for k in range(len(u.transpose())):
+                v[j] = (v[j] + (u[i][k] * g[k][j]))
+                v[j] = v[j] % 2
+    return v
+
 if __name__ == '__main__':
     print("Матрица G (7,4,3):", '\n', G_matrix(7, 4, x_matrix), '\n')
     G = G_matrix(7, 4, x_matrix)
