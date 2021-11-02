@@ -52,15 +52,22 @@ def get_syndroms(G, H):
 
 
 # Task 2.4
-def generate_word_with_one_mistake(G):
+def generate_word_with_one_mistake(G, error_count):
     u = np.zeros(len(G), dtype=int)
     for i in range(len(u)):
         u[i] = random.randint(0, 2)
     u = u.dot(G)
     u %= 2
-    mistake_pos = random.randint(0, 2)
-    u[mistake_pos] += 1
-    u[mistake_pos] %= 2
+    err_arr = np.zeros(error_count, dtype=int)
+    # first_mistake_pos = random.randint(0, 2)
+    # err_arr[0] = first_mistake_pos
+    for k in range(error_count):
+        mistake_pos = random.randint(0, len(u)-1)
+        while (mistake_pos in err_arr):
+            mistake_pos = random.randint(0, len(u)-1)
+        err_arr[k]=mistake_pos
+        u[mistake_pos] += 1
+        u[mistake_pos] %= 2
     return u
 
 
@@ -84,7 +91,7 @@ def fist_part():
     S = get_syndroms(G, H)
     print("Матрица синдромов S", '\n', S, '\n')
 
-    word_with_one_mistake = generate_word_with_one_mistake(G)
+    word_with_one_mistake = generate_word_with_one_mistake(G, 3)
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
 
     S = get_syndroms(word_with_one_mistake, H)
