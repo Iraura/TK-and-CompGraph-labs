@@ -56,8 +56,11 @@ def get_syndroms(G, H):
 
 
 if __name__ == '__main__':
-    print("Матрица G (7,4,3):", '\n', G_matrix(7, 4, x_matrix), '\n')
     G = G_matrix(7, 4, x_matrix)
+    print("Матрица G (7,4,3):", '\n', G, '\n')
+
     H = H_matrix(G)
-    S = get_syndroms(G, H)
     print("Проверочная матрица H", '\n', H, '\n')
+
+    S = get_syndroms(G, H)
+    print("Матрица синдромов S", '\n', S, '\n')
