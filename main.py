@@ -70,3 +70,6 @@ if __name__ == '__main__':
 
     word_with_one_mistake = generate_word_with_one_mistake(G)
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
+
+    S = get_syndroms(word_with_one_mistake, H)
+    print("синдром для кодового слова с ошибкой", '\n', S, '\n')
