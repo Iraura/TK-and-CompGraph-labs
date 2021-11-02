@@ -62,9 +62,9 @@ def generate_word_with_one_mistake(G, error_count):
     # first_mistake_pos = random.randint(0, 2)
     # err_arr[0] = first_mistake_pos
     for k in range(error_count):
-        mistake_pos = random.randint(0, len(u)-1)
+        mistake_pos = random.randint(0, len(u))
         while (mistake_pos in err_arr):
-            mistake_pos = random.randint(0, len(u)-1)
+            mistake_pos = random.randint(0, len(u))
         err_arr[k]=mistake_pos
         u[mistake_pos] += 1
         u[mistake_pos] %= 2
