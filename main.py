@@ -57,8 +57,6 @@ def generate_word_with_one_mistake(G):
     u[mistake_pos] %= 2
     return u
 
-
-# Task 2.5
 def get_correct_word(H, sindrom, slovo):
     k = 0
     for i in range(len(H)):
