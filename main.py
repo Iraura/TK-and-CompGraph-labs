@@ -7,11 +7,11 @@ x_matrix_first = np.array([[1, 1, 1],
                            [1, 0, 1],
                            [0, 1, 1]])
 
-x_matrix_second = np.array([[1, 1, 1, 1, 1, 1],
-                            [1, 1, 0, 0, 0, 0],
-                            [1, 0, 1, 0, 0, 0],
-                            [0, 1, 1, 0, 0, 0],
-                            [0, 1, 1, 0, 0, 0]])
+
+x_matrix_second = np.array([[1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
+                            [0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1],
+                            [0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1],
+                            [0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0]])
 
 
 # Task 2.1
@@ -115,7 +115,7 @@ def fist_part():
 
 
 def second_part():
-    G = G_matrix(11, 5, x_matrix_second)
+    G = G_matrix(11, 4, x_matrix_second)
     print("Пождающая матрица G (11,5,5):", '\n', G, '\n')
 
     H = H_matrix(G)
@@ -138,4 +138,4 @@ def second_part():
 
 
 if __name__ == '__main__':
-    fist_part()
+    second_part()
