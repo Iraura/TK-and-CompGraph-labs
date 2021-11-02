@@ -108,7 +108,7 @@ def fist_part():
     print("синдром для кодового слова с двумя ошибками", '\n', S, '\n')
 
     correct_word_with_two_mistake = get_correct_word(H, S, word_with_two_mistakes)
-    print("исправленное кодовое слово c одной ошибкой", '\n', correct_word_with_two_mistake, '\n')
+    print("исправленное кодовое слово c двумя ошибкой", '\n', correct_word_with_two_mistake, '\n')
 
     test = np.dot(correct_word_with_two_mistake, H) % 2
     print("TEST", '\n', test, '\n')
@@ -131,9 +131,33 @@ def second_part():
     print("синдром для кодового слова с ошибкой", '\n', S, '\n')
 
     correct_word = get_correct_word(H, S, word_with_one_mistake)
-    print("исправленное кодовое слово", '\n', correct_word, '\n')
+    print("исправленное кодовое слово с одной ошибкой", '\n', correct_word, '\n')
 
     test = np.dot(correct_word, H) % 2
+    print("TEST", '\n', test, '\n')
+
+    word_with_two_mistakes = generate_word_with_n_mistakes(G, 2)
+    print("Кодовое слово с двумя ошибками", '\n', word_with_two_mistakes, '\n')
+
+    S = get_syndroms(word_with_two_mistakes, H)
+    print("синдром для кодового слова с двумя ошибками", '\n', S, '\n')
+
+    correct_word_with_two_mistake = get_correct_word(H, S, word_with_two_mistakes)
+    print("исправленное кодовое слово c двумя ошибкой", '\n', correct_word_with_two_mistake, '\n')
+
+    test = np.dot(correct_word_with_two_mistake, H) % 2
+    print("TEST", '\n', test, '\n')
+
+    word_with_three_mistakes = generate_word_with_n_mistakes(G, 3)
+    print("Кодовое слово с тремя ошибками", '\n', word_with_three_mistakes, '\n')
+
+    S = get_syndroms(word_with_three_mistakes, H)
+    print("синдром для кодового слова с тремя ошибками", '\n', S, '\n')
+
+    correct_word_with_three_mistake = get_correct_word(H, S, word_with_three_mistakes)
+    print("исправленное кодовое слово c тремя ошибкой", '\n', correct_word_with_three_mistake, '\n')
+
+    test = np.dot(correct_word_with_three_mistake, H) % 2
     print("TEST", '\n', test, '\n')
 
 
