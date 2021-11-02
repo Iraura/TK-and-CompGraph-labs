@@ -37,27 +37,15 @@ def H_matrix(G):
             H[i + len(G), j] = I_n_k[i, j]
     return H
 
-    # Умножение матриц
-
-
-def mult(u, g):
-    v = np.zeros(len(g.transpose()), dtype=int)
-    for i in range(len(u)):
-        for j in range(len(g.transpose())):
-            for k in range(len(u.transpose())):
-                v[j] = (v[j] + (u[i][k] * g[k][j]))
-                v[j] = v[j] % 2
-    return v
-
 
 # Task 2.3
 def get_syndroms(G, H):
-    return mult(G, H)
+    return G.dot(H) % 2
 
 
 if __name__ == '__main__':
     G = G_matrix(7, 4, x_matrix)
-    print("Матрица G (7,4,3):", '\n', G, '\n')
+    print("Пождающая матрица G (7,4,3):", '\n', G, '\n')
 
     H = H_matrix(G)
     print("Проверочная матрица H", '\n', H, '\n')
