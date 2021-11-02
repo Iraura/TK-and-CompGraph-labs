@@ -5,7 +5,7 @@ x_matrix = np.array([[1, 1, 1],
                     [1, 0, 1],
                     [0, 1, 1]])
 
-
+# Task 2.1
 def G_matrix(n, k, x):
     G = np.zeros((k, n), dtype = int)
     I_k = np.eye(k)
@@ -16,6 +16,7 @@ def G_matrix(n, k, x):
             G[i, k + m] = x[i, m]
     return G
 
+# Task 2.2
 def H_matrix(G):
     H = np.zeros((len(G.T), len(G.T) - len(G)), dtype = int)
     x_h = np.zeros((len(G), len(G.T) - len(G)), dtype = int)
