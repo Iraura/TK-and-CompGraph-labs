@@ -59,8 +59,6 @@ def generate_word_with_n_mistakes(G, error_count):
     u = u.dot(G)
     u %= 2
     err_arr = np.zeros(error_count, dtype=int)
-    # first_mistake_pos = random.randint(0, 1)
-    # err_arr[0] = first_mistake_pos
     for k in range(error_count):
         mistake_pos = random.randint(0, len(u) - 1)
         while (mistake_pos in err_arr):
@@ -91,7 +89,7 @@ def fist_part():
     S = get_syndroms(G, H)
     print("Матрица синдромов S", '\n', S, '\n')
 
-    word_with_one_mistake = generate_word_with_n_mistakes(G, 3)
+    word_with_one_mistake = generate_word_with_n_mistakes(G, 2)
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
 
     S = get_syndroms(word_with_one_mistake, H)
