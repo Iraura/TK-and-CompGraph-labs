@@ -45,9 +45,10 @@ def get_syndroms(G, H):
     return G.dot(H) % 2
 
 
+
 # Task 2.4
 def generate_word_with_one_mistake(G):
-    u = np.zeros(len(G))
+    u = np.zeros(len(G), dtype=int)
     for i in range(len(u)):
         u[i] = random.randint(0, 2)
     u = u.dot(G)
@@ -56,6 +57,8 @@ def generate_word_with_one_mistake(G):
     u[mistake_pos] += 1
     u[mistake_pos] %= 2
     return u
+
+
 
 
 if __name__ == '__main__':
@@ -67,6 +70,8 @@ if __name__ == '__main__':
 
     S = get_syndroms(G, H)
     print("Матрица синдромов S", '\n', S, '\n')
+
+
 
     word_with_one_mistake = generate_word_with_one_mistake(G)
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
