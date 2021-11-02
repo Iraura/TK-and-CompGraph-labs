@@ -2,10 +2,16 @@ import random
 
 import numpy as np
 
-x_matrix = np.array([[1, 1, 1],
-                     [1, 1, 0],
-                     [1, 0, 1],
-                     [0, 1, 1]])
+x_matrix_first = np.array([[1, 1, 1],
+                           [1, 1, 0],
+                           [1, 0, 1],
+                           [0, 1, 1]])
+
+x_matrix_second = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                            [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1]])
 
 
 # Task 2.1
@@ -66,9 +72,8 @@ def get_correct_word(H, sindrom, slovo):
     slovo[k] %= 2
     return slovo
 
-
-if __name__ == '__main__':
-    G = G_matrix(7, 4, x_matrix)
+def fist_part():
+    G = G_matrix(7, 4, x_matrix_first)
     print("Пождающая матрица G (7,4,3):", '\n', G, '\n')
 
     H = H_matrix(G)
@@ -88,3 +93,29 @@ if __name__ == '__main__':
 
     test = np.dot(correct_word, H) % 2
     print("TEST", '\n', test, '\n')
+
+    def second_part():
+        G = G_matrix(11, 5, x_matrix_first)
+        print("Пождающая матрица G (11,5,5):", '\n', G, '\n')
+
+        H = H_matrix(G)
+        print("Проверочная матрица H", '\n', H, '\n')
+
+        S = get_syndroms(G, H)
+        print("Матрица синдромов S", '\n', S, '\n')
+
+        word_with_one_mistake = generate_word_with_one_mistake(G)
+        print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
+
+        S = get_syndroms(word_with_one_mistake, H)
+        print("синдром для кодового слова с ошибкой", '\n', S, '\n')
+
+        correct_word = get_correct_word(H, S, word_with_one_mistake)
+        print("исправленное кодовое слово", '\n', correct_word, '\n')
+
+        test = np.dot(correct_word, H) % 2
+        print("TEST", '\n', test, '\n')
+
+
+if __name__ == '__main__':
+   fist_part()
