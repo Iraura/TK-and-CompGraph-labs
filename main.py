@@ -60,7 +60,7 @@ def generate_word_with_n_mistakes(G, error_count):
     err_arr = np.zeros(error_count, dtype=int)
     for k in range(error_count):
         mistake_pos = random.randint(0, len(u) - 1)
-        while (mistake_pos in err_arr):
+        while mistake_pos in err_arr:
             mistake_pos = random.randint(0, len(u) - 1)
         err_arr[k] = mistake_pos
         u[mistake_pos] += 1
@@ -71,9 +71,9 @@ def generate_word_with_n_mistakes(G, error_count):
 def get_correct_word_one_mistake(H, sindrom, slovo):
     k = -1
     for i in range(len(H)):
-        if (np.array_equal(sindrom, H[i])):
+        if np.array_equal(sindrom, H[i]):
             k = i
-    if (k == -1):
+    if k == -1:
         print("Такого синдрома нет в матрице Н", '\n')
     else:
         slovo[k] += 1
@@ -85,19 +85,19 @@ def get_correct_word_two_mistakes(H, sindrom, slovo):
     k = -1
     d = -1
     for i in range(len(H)):
-        if (np.array_equal(sindrom, H[i])):
+        if np.array_equal(sindrom, H[i]):
             k = i
             break
         for j in range(i + 1, len(H)):
-            if (np.array_equal(sindrom, H[i] + H[j])):
+            if np.array_equal(sindrom, H[i] + H[j]):
                 k = i
                 d = j
-    if (k == -1):
+    if k == -1:
         print("Такого синдрома нет в матрице синдромов", '\n')
     else:
         slovo[k] += 1
         slovo[k] %= 2
-        if (d != -1):
+        if d != -1:
             slovo[d] += 1
             slovo[d] %= 2
     return slovo
