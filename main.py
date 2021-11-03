@@ -74,8 +74,11 @@ def get_correct_word(H, sindrom, slovo):
     for i in range(len(H)):
         if (np.array_equal(sindrom, H[i])):
             k = i
-    slovo[k] += 1
-    slovo[k] %= 2
+    if (k == 0):
+        print("Такого синдрома нет в матрице Н", '\n')
+    else:
+        slovo[k] += 1
+        slovo[k] %= 2
     return slovo
 
 
@@ -89,7 +92,7 @@ def first_part():
     print("Проверочная матрица H", '\n', H, '\n')
 
     S = get_syndroms(G, H)
-    print("Матрица синдромов S", '\n', S, '\n')
+    #print("Матрица синдромов S", '\n', S, '\n')
 
     word_with_one_mistake = generate_word_with_n_mistakes(G, 1)
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
@@ -126,7 +129,7 @@ def second_part():
     print("Проверочная матрица H", '\n', H, '\n')
 
     S = get_syndroms(G, H)
-    print("Матрица синдромов S", '\n', S, '\n')
+    #print("Матрица синдромов S", '\n', S, '\n')
 
     word_with_one_mistake = generate_word_with_n_mistakes(G, 1)
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
