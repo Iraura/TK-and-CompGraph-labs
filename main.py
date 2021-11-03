@@ -8,10 +8,10 @@ x_matrix_first = np.array([[1, 1, 1],
                            [0, 1, 1]])
 
 
-x_matrix_second = np.array([[1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
-                            [0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1],
-                            [0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1],
-                            [0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0]])
+x_matrix_second = np.array([[0, 1, 1, 1, 1, 0, 0],
+                            [1, 1, 0, 1, 1, 1, 1],
+                            [0, 0, 1, 1, 0, 1, 1],
+                            [1, 0, 1, 0, 1, 1, 0]])
 
 
 # Task 2.1
@@ -79,7 +79,9 @@ def get_correct_word(H, sindrom, slovo):
     return slovo
 
 
-def fist_part():
+def first_part():
+    print("    Часть 1", '\n', "_________________", '\n')
+
     G = G_matrix(7, 4, x_matrix_first)
     print("Пождающая матрица G (7,4,3):", '\n', G, '\n')
 
@@ -93,30 +95,32 @@ def fist_part():
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
 
     S = get_syndroms(word_with_one_mistake, H)
-    print("синдром для кодового слова с ошибкой", '\n', S, '\n')
+    print("Синдром для кодового слова с ошибкой", '\n', S, '\n')
 
     correct_word_with_one_mistake = get_correct_word(H, S, word_with_one_mistake)
-    print("исправленное кодовое слово c одной ошибкой", '\n', correct_word_with_one_mistake, '\n')
+    print("Исправленное кодовое слово c одной ошибкой", '\n', correct_word_with_one_mistake, '\n')
 
     test = np.dot(correct_word_with_one_mistake, H) % 2
-    print("TEST", '\n', test, '\n')
+    print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
     word_with_two_mistakes = generate_word_with_n_mistakes(G, 2)
     print("Кодовое слово с двумя ошибками", '\n', word_with_two_mistakes, '\n')
 
     S = get_syndroms(word_with_two_mistakes, H)
-    print("синдром для кодового слова с двумя ошибками", '\n', S, '\n')
+    print("Синдром для кодового слова с двумя ошибками", '\n', S, '\n')
 
     correct_word_with_two_mistake = get_correct_word(H, S, word_with_two_mistakes)
-    print("исправленное кодовое слово c двумя ошибкой", '\n', correct_word_with_two_mistake, '\n')
+    print("Исправленное кодовое слово c двумя ошибками", '\n', correct_word_with_two_mistake, '\n')
 
     test = np.dot(correct_word_with_two_mistake, H) % 2
-    print("TEST", '\n', test, '\n')
+    print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
 
 def second_part():
+    print("    Часть 2", '\n', "_________________", '\n')
+
     G = G_matrix(11, 4, x_matrix_second)
-    print("Пождающая матрица G (11,5,5):", '\n', G, '\n')
+    print("Пождающая матрица G (11,4,5):", '\n', G, '\n')
 
     H = H_matrix(G)
     print("Проверочная матрица H", '\n', H, '\n')
@@ -128,38 +132,39 @@ def second_part():
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
 
     S = get_syndroms(word_with_one_mistake, H)
-    print("синдром для кодового слова с ошибкой", '\n', S, '\n')
+    print("Синдром для кодового слова с ошибкой", '\n', S, '\n')
 
     correct_word = get_correct_word(H, S, word_with_one_mistake)
-    print("исправленное кодовое слово с одной ошибкой", '\n', correct_word, '\n')
+    print("Исправленное кодовое слово с одной ошибкой", '\n', correct_word, '\n')
 
     test = np.dot(correct_word, H) % 2
-    print("TEST", '\n', test, '\n')
+    print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
     word_with_two_mistakes = generate_word_with_n_mistakes(G, 2)
     print("Кодовое слово с двумя ошибками", '\n', word_with_two_mistakes, '\n')
 
     S = get_syndroms(word_with_two_mistakes, H)
-    print("синдром для кодового слова с двумя ошибками", '\n', S, '\n')
+    print("Синдром для кодового слова с двумя ошибками", '\n', S, '\n')
 
     correct_word_with_two_mistake = get_correct_word(H, S, word_with_two_mistakes)
-    print("исправленное кодовое слово c двумя ошибкой", '\n', correct_word_with_two_mistake, '\n')
+    print("Исправленное кодовое слово c двумя ошибками", '\n', correct_word_with_two_mistake, '\n')
 
     test = np.dot(correct_word_with_two_mistake, H) % 2
-    print("TEST", '\n', test, '\n')
+    print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
     word_with_three_mistakes = generate_word_with_n_mistakes(G, 3)
     print("Кодовое слово с тремя ошибками", '\n', word_with_three_mistakes, '\n')
 
     S = get_syndroms(word_with_three_mistakes, H)
-    print("синдром для кодового слова с тремя ошибками", '\n', S, '\n')
+    print("Синдром для кодового слова с тремя ошибками", '\n', S, '\n')
 
     correct_word_with_three_mistake = get_correct_word(H, S, word_with_three_mistakes)
-    print("исправленное кодовое слово c тремя ошибкой", '\n', correct_word_with_three_mistake, '\n')
+    print("Исправленное кодовое слово c тремя ошибками", '\n', correct_word_with_three_mistake, '\n')
 
     test = np.dot(correct_word_with_three_mistake, H) % 2
-    print("TEST", '\n', test, '\n')
+    print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
 
 if __name__ == '__main__':
+    first_part()
     second_part()
