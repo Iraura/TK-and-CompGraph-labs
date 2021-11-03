@@ -95,7 +95,7 @@ def generate_word_with_n_mistakes(G, error_count):
         u[i] = random.randint(0, 1)
     u = u.dot(G)
     u %= 2
-    err_arr = np.empty(error_count, dtype=int)
+    err_arr = np.full(error_count, len(u) + 1, dtype=int)
     for k in range(error_count):
         mistake_pos = random.randint(0, len(u) - 1)
         while mistake_pos in err_arr:
