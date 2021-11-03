@@ -24,7 +24,6 @@ x_matrix_3 = np.array([[0, 1, 0, 1],
                        [1, 1, 1, 0]])
 
 
-# Task 2.1
 def G_matrix_hemming(n, k, x):
     G = np.zeros((k, n), dtype=int)
     I_k = np.eye(k)
@@ -36,7 +35,6 @@ def G_matrix_hemming(n, k, x):
     return G
 
 
-# Task 2.2
 def H_matrix_hemming(G):
     H = np.zeros((len(G.T), len(G.T) - len(G)), dtype=int)
     x_h = np.zeros((len(G), len(G.T) - len(G)), dtype=int)
@@ -53,6 +51,28 @@ def H_matrix_hemming(G):
     for i in range(len(G.T) - len(G)):
         for j in range(len(G.T) - len(G)):
             H[i + len(G), j] = I_n_k[i, j]
+    return H
+
+
+def H_matrix_hemming_extended(G):
+    H = np.zeros((len(G.T), len(G.T) - len(G)), dtype=int)
+    x_h = np.zeros((len(G), len(G.T) - len(G)), dtype=int)
+    I_n_k = np.eye(len(G.T) - len(G))
+
+    for i in range(len(G)):
+        for j in range(len(G.T) - len(G)):
+            x_h[i, j] = G[i, j + len(G)]
+
+    for i in range(len(G)):
+        for j in range(len(G.T) - len(G)):
+            H[i, j] = x_h[i, j]
+
+    for i in range(len(G.T) - len(G)):
+        for j in range(len(G.T) - len(G)):
+            H[i + len(G), j] = I_n_k[i, j]
+
+    for i in range(len(H)):
+        H[i][len(H.T) - 1] = 1
     return H
 
 
@@ -146,7 +166,6 @@ def get_correct_word_three_mistakes(H, sindrom, slovo):
 
 
 def first_part_3_1_3_2(n, k, x_matrix):
-
     G = G_matrix_hemming(n, k, x_matrix)
     print("Пождающая матрица G (", n, ", ", k, ", ", "3):", '\n', G, '\n')
 
