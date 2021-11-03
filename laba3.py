@@ -126,12 +126,13 @@ def get_correct_word_two_mistakes(H, sindrom, slovo):
         if np.array_equal(sindrom, H[i]):
             k = i
             break
-        if k > 0:
-            break
         for j in range(i + 1, len(H)):
             if np.array_equal(sindrom, H[i] + H[j]):
                 k = i
                 d = j
+                break
+        if k >= 0:
+            break
     if k == -1:
         print("Такого синдрома нет в матрице синдромов", '\n')
     else:
@@ -151,14 +152,10 @@ def get_correct_word_three_mistakes(H, sindrom, slovo):
         if np.array_equal(sindrom, H[i]):
             k = i
             break
-        if k > 0:
-            break
         for j in range(i + 1, len(H)):
             if np.array_equal(sindrom, H[i] + H[j]):
                 k = i
                 d = j
-                break
-            if k > 0:
                 break
             for e in range(j + 1, len(H)):
                 if np.array_equal(sindrom, H[i] + H[j] + H[e]):
@@ -166,6 +163,10 @@ def get_correct_word_three_mistakes(H, sindrom, slovo):
                     d = j
                     g = e
                     break
+            if k >= 0:
+                break
+        if k >= 0:
+            break
     if k == -1:
         print("Такого синдрома нет в матрице синдромов", '\n')
     else:
@@ -189,22 +190,16 @@ def get_correct_word_four_mistakes(H, sindrom, slovo):
         if np.array_equal(sindrom, H[i]):
             k = i
             break
-        if k > 0:
-            break
         for j in range(i + 1, len(H)):
             if np.array_equal(sindrom, H[i] + H[j]):
                 k = i
                 d = j
-                break
-            if k > 0:
                 break
             for e in range(j + 1, len(H)):
                 if np.array_equal(sindrom, H[i] + H[j] + H[e]):
                     k = i
                     d = j
                     g = e
-                    break
-                if k > 0:
                     break
                 for y in range(e + 1, len(H)):
                     if np.array_equal(sindrom, H[i] + H[j] + H[e] + H[y]):
@@ -213,6 +208,12 @@ def get_correct_word_four_mistakes(H, sindrom, slovo):
                         g = e
                         z = y
                         break
+                if k >= 0:
+                    break
+            if k >= 0:
+                break
+        if k >= 0:
+            break
     if k == -1:
         print("Такого синдрома нет в матрице синдромов", '\n')
     else:
