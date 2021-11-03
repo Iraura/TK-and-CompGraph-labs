@@ -148,7 +148,7 @@ def get_correct_word_three_mistakes(H, sindrom, slovo):
 def first_part_3_1_3_2(n, k, x_matrix):
 
     G = G_matrix_hemming(n, k, x_matrix)
-    print("Пождающая матрица G :", '\n', G, '\n')
+    print("Пождающая матрица G (", n, ", ", k, ", ", "3):", '\n', G, '\n')
 
     H = H_matrix_hemming(G)
     print("Проверочная матрица H", '\n', H, '\n')
