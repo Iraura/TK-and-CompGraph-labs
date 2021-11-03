@@ -55,21 +55,7 @@ def H_matrix_hemming(G):
 
 
 def H_matrix_hemming_extended(G):
-    H = np.zeros((len(G.T), len(G.T) - len(G)), dtype=int)
-    x_h = np.zeros((len(G), len(G.T) - len(G)), dtype=int)
-    I_n_k = np.eye(len(G.T) - len(G))
-
-    for i in range(len(G)):
-        for j in range(len(G.T) - len(G)):
-            x_h[i, j] = G[i, j + len(G)]
-
-    for i in range(len(G)):
-        for j in range(len(G.T) - len(G)):
-            H[i, j] = x_h[i, j]
-
-    for i in range(len(G.T) - len(G)):
-        for j in range(len(G.T) - len(G)):
-            H[i + len(G), j] = I_n_k[i, j]
+    H = H_matrix_hemming(G)
 
     for i in range(len(H)):
         H[i][len(H.T) - 1] = 1
