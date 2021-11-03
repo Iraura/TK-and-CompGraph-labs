@@ -146,10 +146,9 @@ def get_correct_word_three_mistakes(H, sindrom, slovo):
 
 
 def first_part_3_1_3_2(n, k, x_matrix):
-    print("    Часть 1", '\n', "_________________", '\n')
 
     G = G_matrix_hemming(n, k, x_matrix)
-    print("Пождающая матрица G (7,4,3):", '\n', G, '\n')
+    print("Пождающая матрица G :", '\n', G, '\n')
 
     H = H_matrix_hemming(G)
     print("Проверочная матрица H", '\n', H, '\n')
@@ -179,17 +178,17 @@ def first_part_3_1_3_2(n, k, x_matrix):
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
     word_with_three_mistakes = generate_word_with_n_mistakes(G, 3)
-    print("Кодовое слово с двумя ошибками", '\n', word_with_three_mistakes, '\n')
+    print("Кодовое слово с тремя ошибками", '\n', word_with_three_mistakes, '\n')
 
     S = get_syndroms(word_with_three_mistakes, H)
-    print("Синдром для кодового слова с двумя ошибками", '\n', S, '\n')
+    print("Синдром для кодового слова с тремя ошибками", '\n', S, '\n')
 
     correct_word_with_three_mistake = get_correct_word_three_mistakes(H, S, word_with_three_mistakes)
-    print("Исправленное кодовое слово c двумя ошибками", '\n', correct_word_with_three_mistake, '\n')
+    print("Исправленное кодовое слово c тремя ошибками", '\n', correct_word_with_three_mistake, '\n')
 
     test = np.dot(correct_word_with_three_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
 
 if __name__ == '__main__':
-    first_part_3_1_3_2(3, 1, x_matrix_1)
+    first_part_3_1_3_2(15, 11, x_matrix_3)
