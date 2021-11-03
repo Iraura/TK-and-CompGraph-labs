@@ -126,6 +126,8 @@ def get_correct_word_two_mistakes(H, sindrom, slovo):
         if np.array_equal(sindrom, H[i]):
             k = i
             break
+        if k > 0:
+            break
         for j in range(i + 1, len(H)):
             if np.array_equal(sindrom, H[i] + H[j]):
                 k = i
@@ -149,10 +151,14 @@ def get_correct_word_three_mistakes(H, sindrom, slovo):
         if np.array_equal(sindrom, H[i]):
             k = i
             break
+        if k > 0:
+            break
         for j in range(i + 1, len(H)):
             if np.array_equal(sindrom, H[i] + H[j]):
                 k = i
                 d = j
+                break
+            if k > 0:
                 break
             for e in range(j + 1, len(H)):
                 if np.array_equal(sindrom, H[i] + H[j] + H[e]):
@@ -183,16 +189,22 @@ def get_correct_word_four_mistakes(H, sindrom, slovo):
         if np.array_equal(sindrom, H[i]):
             k = i
             break
+        if k > 0:
+            break
         for j in range(i + 1, len(H)):
             if np.array_equal(sindrom, H[i] + H[j]):
                 k = i
                 d = j
+                break
+            if k > 0:
                 break
             for e in range(j + 1, len(H)):
                 if np.array_equal(sindrom, H[i] + H[j] + H[e]):
                     k = i
                     d = j
                     g = e
+                    break
+                if k > 0:
                     break
                 for y in range(e + 1, len(H)):
                     if np.array_equal(sindrom, H[i] + H[j] + H[e] + H[y]):
@@ -319,5 +331,5 @@ def second_part_3_3_3_4(n, k, x_matrix):
 
 
 if __name__ == '__main__':
-    #first_part_3_1_3_2(15, 11, x_matrix_3)
+    # first_part_3_1_3_2(15, 11, x_matrix_3)
     second_part_3_3_3_4(4, 1, x_matrix_ext_1)
