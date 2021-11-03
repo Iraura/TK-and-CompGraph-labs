@@ -45,8 +45,7 @@ x_matrix_ext_3 = np.array([[0, 1, 0, 1, 0],
                            [1, 1, 1, 1, 0],
                            [1, 1, 1, 0, 0]])
 
-
-# Task 2.1
+# Формирование порождающей матрицы Хэмминга
 def G_matrix_hemming(n, k, x):
     G = np.zeros((k, n), dtype=int)
     I_k = np.eye(k)
@@ -57,7 +56,7 @@ def G_matrix_hemming(n, k, x):
             G[i, k + m] = x[i, m]
     return G
 
-
+# Формирование проверочной матрицы Хэмминга
 def H_matrix_hemming(G):
     H = np.zeros((len(G.T), len(G.T) - len(G)), dtype=int)
     x_h = np.zeros((len(G), len(G.T) - len(G)), dtype=int)
@@ -76,7 +75,7 @@ def H_matrix_hemming(G):
             H[i + len(G), j] = I_n_k[i, j]
     return H
 
-
+# Формирование проверочной матрицы расширенного кода Хэмминга
 def H_matrix_hemming_extended(G):
     H = H_matrix_hemming(G)
 
@@ -84,11 +83,11 @@ def H_matrix_hemming_extended(G):
         H[i][len(H.T) - 1] = 1
     return H
 
-
+# Получение синдрома ошибки
 def get_syndroms(G, H):
     return G.dot(H) % 2
 
-
+# Генерация слова с указанным количеством ошибок
 def generate_word_with_n_mistakes(G, error_count):
     u = np.zeros(len(G), dtype=int)
     for i in range(len(u)):
@@ -105,7 +104,7 @@ def generate_word_with_n_mistakes(G, error_count):
         u[mistake_pos] %= 2
     return u
 
-
+# Исправление одинарной ошибки
 def get_correct_word_one_mistake(H, sindrom, slovo):
     k = -1
     for i in range(len(H)):
@@ -118,7 +117,7 @@ def get_correct_word_one_mistake(H, sindrom, slovo):
         slovo[k] %= 2
     return slovo
 
-
+# Исправление двойной ошибки
 def get_correct_word_two_mistakes(H, sindrom, slovo):
     k = -1
     d = -1
@@ -143,7 +142,7 @@ def get_correct_word_two_mistakes(H, sindrom, slovo):
             slovo[d] %= 2
     return slovo
 
-
+# Исправление тройной ошибки
 def get_correct_word_three_mistakes(H, sindrom, slovo):
     k = -1
     d = -1
@@ -180,7 +179,7 @@ def get_correct_word_three_mistakes(H, sindrom, slovo):
             slovo[g] %= 2
     return slovo
 
-
+# Исправление четверной ошибки
 def get_correct_word_four_mistakes(H, sindrom, slovo):
     k = -1
     d = -1
@@ -230,7 +229,7 @@ def get_correct_word_four_mistakes(H, sindrom, slovo):
             slovo[z] %= 2
     return slovo
 
-
+# Исследование кодов Хэмминга (3,1,3), (7,4,3) и (15,11,3)
 def first_part_3_1_3_2(n, k, x_matrix):
     G = G_matrix_hemming(n, k, x_matrix)
     print("Пождающая матрица G (", n, ", ", k, ", ", "3):", '\n', G, '\n')
@@ -274,7 +273,7 @@ def first_part_3_1_3_2(n, k, x_matrix):
     test = np.dot(correct_word_with_three_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
-
+# Исследование рассширенных кодов Хэмминга (4,1,3), (8,4,3) и (16,11,3)
 def second_part_3_3_3_4(n, k, x_matrix):
     G = G_matrix_hemming(n, k, x_matrix)
     print("Пождающая матрица G (", n, ", ", k, ", ", "3):", '\n', G, '\n')
@@ -332,5 +331,10 @@ def second_part_3_3_3_4(n, k, x_matrix):
 
 
 if __name__ == '__main__':
-    # first_part_3_1_3_2(15, 11, x_matrix_3)
+    first_part_3_1_3_2(3, 1, x_matrix_1)
+    first_part_3_1_3_2(7, 4, x_matrix_2)
+    first_part_3_1_3_2(15, 11, x_matrix_3)
+    print('\n', "Расширенная матрица Хэмминга", '\n')
     second_part_3_3_3_4(4, 1, x_matrix_ext_1)
+    second_part_3_3_3_4(8, 4, x_matrix_ext_2)
+    second_part_3_3_3_4(16, 11, x_matrix_ext_3)
