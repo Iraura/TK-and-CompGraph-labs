@@ -23,10 +23,10 @@ x_matrix_3 = np.array([[0, 1, 0, 1],
                        [1, 1, 1, 1],
                        [1, 1, 1, 0]])
 
-# 4, 3 , 3
+# 4, 1, 3
 x_matrix_ext_1 = np.array(([[1, 1, 0]]))
 
-# 8, 4 ,3
+# 8, 4, 3
 x_matrix_ext_2 = np.array([[1, 1, 1, 0],
                            [1, 1, 0, 1],
                            [1, 0, 1, 1],
@@ -309,14 +309,15 @@ def second_part_3_3_3_4(n, k, x_matrix):
     print("Кодовое слово с четыремя ошибками", '\n', word_with_four_mistakes, '\n')
 
     S = get_syndroms(word_with_four_mistakes, H)
-    print("Синдром для кодового слова с тремя ошибками", '\n', S, '\n')
+    print("Синдром для кодового слова с четырьмя ошибками", '\n', S, '\n')
 
     correct_word_with_four_mistake = get_correct_word_four_mistakes(H, S, word_with_four_mistakes)
-    print("Исправленное кодовое слово c тремя ошибками", '\n', correct_word_with_four_mistake, '\n')
+    print("Исправленное кодовое слово c четырьмя ошибками", '\n', correct_word_with_four_mistake, '\n')
 
     test = np.dot(correct_word_with_four_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
 
 if __name__ == '__main__':
-    first_part_3_1_3_2(15, 11, x_matrix_3)
+    #first_part_3_1_3_2(15, 11, x_matrix_3)
+    second_part_3_3_3_4(4, 1, x_matrix_ext_1)
