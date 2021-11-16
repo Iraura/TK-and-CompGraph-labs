@@ -63,7 +63,7 @@ def generate_word_with_n_mistakes(G, error_count):
     u = np.zeros(len(G), dtype=int)
     for i in range(len(u)):
         u[i] = random.randint(0, 1)
-    print("Исходное слово",u)
+    print("Исходное слово", u)
     u = u.dot(G)
     u %= 2
     err_arr = np.full(error_count, len(u) + 1, dtype=int)
@@ -230,6 +230,68 @@ def G_Rid_Maller(r, m):
         return np.concatenate([G_top, bottom_matrix])
 
 
+def task_4_4(H_kron, Rid_Maller, number_of_mistakes):
+    w = generate_word_with_n_mistakes(Rid_Maller, number_of_mistakes)
+    w = change_zeros(w)
+
+    Hi_1_3 = H_RID_MALLER_i(H_kron, 1, 3)
+    Hi_2_3 = H_RID_MALLER_i(H_kron, 2, 3)
+    Hi_3_3 = H_RID_MALLER_i(H_kron, 3, 3)
+
+    w_1 = w.dot(Hi_1_3)
+    w_2 = w_1.dot(Hi_2_3)
+    w_3 = w_2.dot(Hi_3_3)
+
+    max_val = -1000000000000
+    max_val_pos = 0
+    for j in range(len(w_3)):
+        if w_3[j] > max_val:
+            max_val = w_3[j]
+            max_val_pos = j
+
+    binary = np.binary_repr(max_val_pos, 3)[::-1]
+    if max_val > 0:
+        binary = "1" + binary
+    else:
+        binary = "0" + binary
+
+    print("RESULT : NUMBER OF MISTAKES ", number_of_mistakes, '\n')
+    print("MAX VALUE", max_val, '\n')
+    print("DECODED WORD ", binary, '\n')
+
+
+def task_4_5(H_kron, Rid_Maller, number_of_mistakes):
+    w = generate_word_with_n_mistakes(Rid_Maller, number_of_mistakes)
+    w = change_zeros(w)
+
+    Hi_1_4 = H_RID_MALLER_i(H_kron, 1, 4)
+    Hi_2_4 = H_RID_MALLER_i(H_kron, 2, 4)
+    Hi_3_4 = H_RID_MALLER_i(H_kron, 3, 4)
+    Hi_4_4 = H_RID_MALLER_i(H_kron, 4, 4)
+
+    w_1 = w.dot(Hi_1_4)
+    w_2 = w_1.dot(Hi_2_4)
+    w_3 = w_2.dot(Hi_3_4)
+    w_4 = w_3.dot(Hi_4_4)
+
+    max_val = -1000000000000
+    max_val_pos = 0
+    for j in range(len(w_4)):
+        if w_4[j] > max_val:
+            max_val = w_4[j]
+            max_val_pos = j
+
+    binary = np.binary_repr(max_val_pos, 4)[::-1]
+    if max_val > 0:
+        binary = "1" + binary
+    else:
+        binary = "0" + binary
+
+    print("RESULT : NUMBER OF MISTAKES ", number_of_mistakes, '\n')
+    print("MAX VALUE", max_val, '\n')
+    print("DECODED WORD ", binary, '\n')
+
+
 # def kron(a, b):
 #     b = np.asanyarray(b)
 #     a = np.array(a, copy=False, subok=True, ndmin=b.ndim)
@@ -331,13 +393,20 @@ if __name__ == '__main__':
         "\n__________________________________________________________________________________________________\n Часть 2\n")
 
     Rid_Maller = G_Rid_Maller(1, 3)
-    print("RED MILLER", '\n', Rid_Maller, '\n')
-    firstSlovo = generate_word_with_n_mistakes(Rid_Maller,1)
-    print("firstSlovo", '\n', firstSlovo, '\n')
-    slovoWithoutZeros = change_zeros(firstSlovo)
-    print("slovoWithoutZeros", '\n', slovoWithoutZeros, '\n')
+    print("RED MILLER 1_3", '\n', Rid_Maller, '\n')
 
     for i in range(1, 3):
         Hi = H_RID_MALLER_i(H_kron, i, 2)
         print("H", i, '\n', Hi, '\n')
     print('\n')
+
+    task_4_4(H_kron, Rid_Maller, 1)
+    task_4_4(H_kron, Rid_Maller, 2)
+
+    Rid_Maller = G_Rid_Maller(1, 4)
+    print("RED MILLER 1_4", '\n', Rid_Maller, '\n')
+
+    task_4_5(H_kron, Rid_Maller, 1)
+    task_4_5(H_kron, Rid_Maller, 2)
+    task_4_5(H_kron, Rid_Maller, 3)
+    task_4_5(H_kron, Rid_Maller, 4)
