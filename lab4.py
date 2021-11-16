@@ -18,7 +18,7 @@ b_matrix = np.array([
 
 # H для произведения Кронекера
 H_kron = np.array([[1, 1],
-              [1, -1]])
+                   [1, -1]])
 
 
 # Формирование порождающей матрицы расширенного кода Голея
@@ -74,6 +74,13 @@ def generate_word_with_n_mistakes(G, error_count):
         u[mistake_pos] += 1
         u[mistake_pos] %= 2
     return u
+
+
+def change_zeros(slovo):
+    for i in range(len(slovo)):
+        if slovo[i] == 0:
+            slovo[i] = -1
+    return slovo
 
 
 # Исправление одинарной ошибки
@@ -221,6 +228,7 @@ def G_Rid_Maller(r, m):
         bottom_matrix[0][len(bottom_matrix.T) - 1] = 1
         return np.concatenate([G_top, bottom_matrix])
 
+
 # def kron(a, b):
 #     b = np.asanyarray(b)
 #     a = np.array(a, copy=False, subok=True, ndmin=b.ndim)
@@ -318,10 +326,15 @@ if __name__ == '__main__':
     test = np.dot(correct_word_with_four_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
-    print("\n__________________________________________________________________________________________________\n Часть 2\n")
+    print(
+        "\n__________________________________________________________________________________________________\n Часть 2\n")
 
     Rid_Maller = G_Rid_Maller(1, 3)
     print("RED MILLER", '\n', Rid_Maller, '\n')
+    firstSlovo = generate_word_with_n_mistakes(Rid_Maller,1)
+    print("firstSlovo", '\n', firstSlovo, '\n')
+    slovoWithoutZeros = change_zeros(firstSlovo)
+    print("slovoWithoutZeros", '\n', slovoWithoutZeros, '\n')
 
     for i in range(1, 3):
         Hi = H_RID_MALLER_i(H_kron, i, 2)
