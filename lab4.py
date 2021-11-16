@@ -254,10 +254,10 @@ def task_4_4(H_kron, Rid_Maller, number_of_mistakes):
         binary = "1" + binary
     else:
         binary = "0" + binary
-
-    print("RESULT : NUMBER OF MISTAKES ", number_of_mistakes, '\n')
-    print("MAX VALUE", max_val, '\n')
-    print("DECODED WORD ", binary, '\n')
+    print("Количество ошибок ", number_of_mistakes, '\n')
+    print("Максимальное значение", max_val, '\n')
+    print("Декодированное сообщение ", binary, '\n')
+    print("__________")
 
 
 def task_4_5(H_kron, Rid_Maller, number_of_mistakes):
@@ -287,9 +287,10 @@ def task_4_5(H_kron, Rid_Maller, number_of_mistakes):
     else:
         binary = "0" + binary
 
-    print("RESULT : NUMBER OF MISTAKES ", number_of_mistakes, '\n')
-    print("MAX VALUE", max_val, '\n')
-    print("DECODED WORD ", binary, '\n')
+    print("Количество ошибок: ", number_of_mistakes, '\n')
+    print("Максимальное значение", max_val, '\n')
+    print("Декодированное сообщение ", binary, '\n')
+    print("__________")
 
 
 # def kron(a, b):
@@ -341,6 +342,8 @@ if __name__ == '__main__':
     H = H_matrix_goley(G)
     print("Проверочная матрица H", '\n', H, '\n')
 
+    print("__________")
+
     word_with_one_mistake = generate_word_with_n_mistakes(G, 1)
     print("Кодовое слово с одной ошибкой", '\n', word_with_one_mistake, '\n')
 
@@ -352,6 +355,8 @@ if __name__ == '__main__':
 
     test = np.dot(correct_word_with_one_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
+
+    print("__________")
 
     word_with_two_mistakes = generate_word_with_n_mistakes(G, 2)
     print("Кодовое слово с двумя ошибками", '\n', word_with_two_mistakes, '\n')
@@ -365,6 +370,8 @@ if __name__ == '__main__':
     test = np.dot(correct_word_with_two_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
+    print("__________")
+
     word_with_three_mistakes = generate_word_with_n_mistakes(G, 3)
     print("Кодовое слово с тремя ошибками", '\n', word_with_three_mistakes, '\n')
 
@@ -376,6 +383,8 @@ if __name__ == '__main__':
 
     test = np.dot(correct_word_with_three_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
+
+    print("__________")
 
     word_with_four_mistakes = generate_word_with_n_mistakes(G, 4)
     print("Кодовое слово с четыремя ошибками", '\n', word_with_four_mistakes, '\n')
@@ -393,18 +402,13 @@ if __name__ == '__main__':
         "\n__________________________________________________________________________________________________\n Часть 2\n")
 
     Rid_Maller = G_Rid_Maller(1, 3)
-    print("RED MILLER 1_3", '\n', Rid_Maller, '\n')
-
-    for i in range(1, 3):
-        Hi = H_RID_MALLER_i(H_kron, i, 2)
-        print("H", i, '\n', Hi, '\n')
-    print('\n')
+    print("Порождающая матрица Рида Маллера (1,3)", '\n', Rid_Maller, '\n')
 
     task_4_4(H_kron, Rid_Maller, 1)
     task_4_4(H_kron, Rid_Maller, 2)
 
     Rid_Maller = G_Rid_Maller(1, 4)
-    print("RED MILLER 1_4", '\n', Rid_Maller, '\n')
+    print("Порождающая матрица Рида Маллера (1,4)", '\n', Rid_Maller, '\n')
 
     task_4_5(H_kron, Rid_Maller, 1)
     task_4_5(H_kron, Rid_Maller, 2)
