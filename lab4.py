@@ -213,7 +213,7 @@ def G_Rid_Maller(r, m):
     elif r == m:
         G_top = G_Rid_Maller(m-1, m)
         bottom_matrix = np.zeros((1, 2 ** m), dtype=int)
-        bottom_matrix[0][len(bottom_matrix)] = 1
+        bottom_matrix[0][len(bottom_matrix.T) - 1] = 1
         return np.concatenate([G_top, bottom_matrix])
 
 if __name__ == '__main__':
@@ -271,5 +271,5 @@ if __name__ == '__main__':
     test = np.dot(correct_word_with_four_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
-    Rid_Maller = G_Rid_Maller(1, 3)
+    Rid_Maller = G_Rid_Maller(2, 2)
     print("RED MILLER", Rid_Maller)
