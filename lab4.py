@@ -63,6 +63,7 @@ def generate_word_with_n_mistakes(G, error_count):
     u = np.zeros(len(G), dtype=int)
     for i in range(len(u)):
         u[i] = random.randint(0, 1)
+    print("Исходное слово",u)
     u = u.dot(G)
     u %= 2
     err_arr = np.full(error_count, len(u) + 1, dtype=int)
