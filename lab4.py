@@ -200,6 +200,21 @@ def get_correct_word_four_mistakes(H, sindrom, slovo):
             slovo[z] %= 2
     return slovo
 
+# Порождающая матрица кода Рида-Маллера
+def G_Rid_Maller(r, m):
+    if 0 < r < m:
+        G11_2 = G_Rid_Maller(r, m-1)
+        G22 = G_Rid_Maller(r-1,m-1)
+        G_left = np.concatenate([G11_2, np.zeros((len(G22), len(G11_2.T)), int)])
+        G_right = np.concatenate([G11_2, G22])
+        return np.concatenate([G_left, G_right], axis=1)
+    elif r == 0:
+        return np.ones((1, 2 ** m), dtype=int)
+    elif r == m:
+        G_top = G_Rid_Maller(m-1, m)
+        bottom_matrix = np.zeros((1, 2 ** m), dtype=int)
+        bottom_matrix[0][len(bottom_matrix) - 1] = 1
+        return np.concatenate([G_top, ])
 
 if __name__ == '__main__':
     G = G_matrix_goley(24, 12, b_matrix)
@@ -255,3 +270,6 @@ if __name__ == '__main__':
 
     test = np.dot(correct_word_with_four_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
+
+    Rid_Maller = G_Rid_Maller(1, 3)
+    print("RED MILLER", Rid_Maller)
