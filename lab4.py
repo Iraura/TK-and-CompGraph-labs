@@ -262,6 +262,8 @@ def H_RID_MALLER_i(H, i, m):
 
 if __name__ == '__main__':
 
+    print("\nЧасть 1 \n")
+
     G = G_matrix_goley(24, 12, b_matrix)
     print("Порождающая матрица G (24, 12, 8):", '\n', G, '\n')
 
@@ -315,6 +317,8 @@ if __name__ == '__main__':
 
     test = np.dot(correct_word_with_four_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
+
+    print("\n__________________________________________________________________________________________________\n Часть 2\n")
 
     Rid_Maller = G_Rid_Maller(1, 3)
     print("RED MILLER", '\n', Rid_Maller, '\n')
