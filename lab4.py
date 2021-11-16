@@ -16,6 +16,10 @@ b_matrix = np.array([
     [0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0]])
 
+# H для произведения Кронекера
+H_kron = np.array([[1, 1],
+              [1, -1]])
+
 
 # Формирование порождающей матрицы расширенного кода Голея
 def G_matrix_goley(n, k, x):
@@ -200,23 +204,64 @@ def get_correct_word_four_mistakes(H, sindrom, slovo):
             slovo[z] %= 2
     return slovo
 
+
 # Порождающая матрица кода Рида-Маллера
 def G_Rid_Maller(r, m):
     if 0 < r < m:
-        G11_2 = G_Rid_Maller(r, m-1)
-        G22 = G_Rid_Maller(r-1,m-1)
+        G11_2 = G_Rid_Maller(r, m - 1)
+        G22 = G_Rid_Maller(r - 1, m - 1)
         G_left = np.concatenate([G11_2, np.zeros((len(G22), len(G11_2.T)), int)])
         G_right = np.concatenate([G11_2, G22])
         return np.concatenate([G_left, G_right], axis=1)
     elif r == 0:
         return np.ones((1, 2 ** m), dtype=int)
     elif r == m:
-        G_top = G_Rid_Maller(m-1, m)
+        G_top = G_Rid_Maller(r - 1, m)
         bottom_matrix = np.zeros((1, 2 ** m), dtype=int)
         bottom_matrix[0][len(bottom_matrix.T) - 1] = 1
         return np.concatenate([G_top, bottom_matrix])
 
+# def kron(a, b):
+#     b = np.asanyarray(b)
+#     a = np.array(a, copy=False, subok=True, ndmin=b.ndim)
+#     ndb, nda = b.ndim, a.ndim
+#     if (nda == 0 or ndb == 0):
+#         return nx.multiply(a, b)
+#     as_ = a.shape
+#     bs = b.shape
+#     if not a.flags.contiguous:
+#         a = np.reshape(a, as_)
+#     if not b.flags.contiguous:
+#         b = np.reshape(b, bs)
+#     nd = ndb
+#     if (ndb != nda):
+#         if (ndb > nda):
+#             as_ = (1,)*(ndb-nda) + as_
+#         else:
+#             bs = (1,)*(nda-ndb) + bs
+#             nd = nda
+#     result = np.outer(a, b).reshape(as_+bs)
+#     axis = nd-1
+#     for _ in range(nd):
+#         result = np.concatenate(result, axis=axis)
+#     wrapper = get_array_prepare(a, b)
+#     if wrapper is not None:
+#         result = wrapper(result)
+#     wrapper = get_array_wrap(a, b)
+#     if wrapper is not None:
+#         result = wrapper(result)
+#     return result
+
+
+# Проверочная матрица кода Рида-Маллера
+def H_RID_MALLER_i(H, i, m):
+    kron_left = np.kron(np.eye(2 ** (m - i), dtype=int), H)
+    kron_right = np.kron(kron_left, np.eye(2 ** (i - 1), dtype=int))
+    return kron_right
+
+
 if __name__ == '__main__':
+
     G = G_matrix_goley(24, 12, b_matrix)
     print("Порождающая матрица G (24, 12, 8):", '\n', G, '\n')
 
@@ -271,5 +316,10 @@ if __name__ == '__main__':
     test = np.dot(correct_word_with_four_mistake, H) % 2
     print("Проверка (умножение исправленного слова на матрицу H)", '\n', test, '\n')
 
-    Rid_Maller = G_Rid_Maller(2, 2)
-    print("RED MILLER", Rid_Maller)
+    Rid_Maller = G_Rid_Maller(1, 3)
+    print("RED MILLER", '\n', Rid_Maller, '\n')
+
+    for i in range(1, 3):
+        Hi = H_RID_MALLER_i(H_kron, i, 2)
+        print("H", i, '\n', Hi, '\n')
+    print('\n')
