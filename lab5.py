@@ -35,12 +35,13 @@ def get_I_combinations(m, r):
     for i in range(len(multiplicity)):
         multiplicity[i] = i
 
-    for r in range(len(multiplicity) + 1):
-        temp = set(combinations(multiplicity, r))
+    for j in range(len(multiplicity) + 1):
+        temp = set(combinations(multiplicity, j))
         for i in temp:
             if len(i) <= r:
                 boolean.add(i)
     return boolean
+
 
 if __name__ == '__main__':
     A = get_basis(3)
@@ -52,12 +53,9 @@ if __name__ == '__main__':
     # v = get_V_I(I, 3)
     # print(v)
 
-    boolean = get_I_combinations(4,3)
+    boolean = get_I_combinations(4, 3)
     print(boolean)
-
-
 
 # Булеан
 
-print(boolean)  # Вывод булеана
 print(len(boolean))
