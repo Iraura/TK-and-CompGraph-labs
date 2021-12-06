@@ -1,6 +1,7 @@
 import numpy as np
 from itertools import product
 from itertools import combinations
+from operator import itemgetter
 
 
 # формируем бинарную матрицу размерности m столбцов
@@ -13,14 +14,12 @@ def get_V_I(I, m):
     if len(I) == 0:
         return np.ones(2 ** m, int)
     else:
-        v = np.zeros(2 ** m, int)
-        index = 0
+        v = []
         for words in get_basis(m):
             f = 1
             for j in I:
                 f *= (words[j] + 1) % 2
-            v[index] = f
-            index += 1
+            v.append(f)
         return v
 
 
@@ -37,14 +36,69 @@ def get_I_combinations(m, r):
                 boolean.append(i)
     return boolean
 
+def sort_I(I, m):
+    r = 0
+    result = []
+    for i in range(len(I)):
+        if len(I[i]) > r:
+            r = len(I[i])
+
+    for k in range(r + 1):
+        s = 0
+        g = m - 1
+        for t in range(k):
+            s += g
+            g = g - 1
+        for j in range(len(I)):
+            for b in range(len(I)):
+                if len(I[b]) == k:
+                    sum = 0
+                    for p in range(k):
+                        sum += I[b][p]
+                    if (sum == s):
+                        if result.__contains__(I[b]):
+                            continue
+                        result.append(I[b])
+                        if s != 0:
+                            s = s - 1
+    return result
+
+def factorial(n):
+    res = 1
+    for i in range(1, n + 1):
+        res *= i
+    return res
+
+
+def Cnk(n, k):
+    return (factorial(n) / (factorial(k) * factorial(n - k))).__int__()
+
+
+def Rid_Maller_size(r, m):
+    size = 0
+    for i in range(r + 1):
+        size += Cnk(m, i)
+    return size
+
+
+def Rid_Maller(r, m):
+    matrix = np.zeros((Rid_Maller_size(r, m), 2 ** m), dtype=int)
+    index = 0
+    for i in get_I_combinations(m, r):
+        matrix[index] = get_V_I(i, m)
+        index += 1
+    return matrix
+
+def get_Komplement(I, m):
+    komplement = []
+    for i in range(m):
+        if i not in I:
+            komplement.append(i)
+    return komplement
+
+
 
 if __name__ == '__main__':
-    A = get_basis(3)
-    print(A, sep='\n')
 
-    print()
-    print("v = ")
-    I = get_I_combinations(4, 3)
-    print(I)
-    v = get_V_I(I[0], 3)
-    print(v)
+    rm = Rid_Maller(3,4)
+    print(rm)
