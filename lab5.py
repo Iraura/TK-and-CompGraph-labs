@@ -2,12 +2,18 @@ import numpy as np
 from itertools import product
 from itertools import combinations
 from operator import itemgetter
+import math
 
 
 # формируем бинарную матрицу размерности m столбцов
 def get_basis(cols):
     return list(product([0, 1], repeat=cols))
 
+def f(words, I):
+    f = 1
+    for j in I:
+        f *= (words[j] + 1) % 2
+    return f
 
 # Векторная форма, формируем v
 def get_V_I(I, m):
@@ -16,9 +22,7 @@ def get_V_I(I, m):
     else:
         v = []
         for words in get_basis(m):
-            f = 1
-            for j in I:
-                f *= (words[j] + 1) % 2
+            f(words, I)
             v.append(f)
         return v
 
@@ -63,21 +67,10 @@ def sort_I(I, m):
                             s = s - 1
     return result
 
-def factorial(n):
-    res = 1
-    for i in range(1, n + 1):
-        res *= i
-    return res
-
-
-def Cnk(n, k):
-    return (factorial(n) / (factorial(k) * factorial(n - k))).__int__()
-
-
 def Rid_Maller_size(r, m):
     size = 0
     for i in range(r + 1):
-        size += Cnk(m, i)
+        size += math.comb(m, i)
     return size
 
 
@@ -95,6 +88,16 @@ def get_Komplement(I, m):
         if i not in I:
             komplement.append(i)
     return komplement
+
+def get_H_I(I, m):
+    H_I = []
+    for words in get_basis(m):
+        f = 1
+        for i in I:
+            f *= (words[i] + 1) % 2
+        if f == 1:
+            H_I.append(words)
+    return H_I
 
 
 
