@@ -8,11 +8,6 @@ def get_basis(cols):
     return list(product([0, 1], repeat=cols))
 
 
-# генерируем подмножество I
-def get_I(m):
-    return 0
-
-
 # Векторная форма, формируем v
 def get_V_I(I, m):
     if len(I) == 0:
@@ -31,15 +26,15 @@ def get_V_I(I, m):
 
 def get_I_combinations(m, r):
     multiplicity = np.zeros(m, int)
-    boolean = set()
+    boolean = list()
     for i in range(len(multiplicity)):
         multiplicity[i] = i
 
     for j in range(len(multiplicity) + 1):
-        temp = set(combinations(multiplicity, j))
+        temp = list(combinations(multiplicity, j))
         for i in temp:
             if len(i) <= r:
-                boolean.add(i)
+                boolean.append(i)
     return boolean
 
 
