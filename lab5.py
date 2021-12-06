@@ -41,7 +41,7 @@ def get_V_I_t(I, m, t):
     else:
         v = []
         for words in get_basis(m):
-            f = f_meth(words, I, t)
+            f = f_meth_t(words, I, t)
             v.append(f)
         return v
 
@@ -80,14 +80,14 @@ def sort_I(I, m):
                     for p in range(k):
                         sum += I[b][p]
                     if (sum == s) or (s != 1 and s % 2 == 1 and sum == s + 1):
-                        if result.contains(I[b]):
+                        if result.__contains__(I[b]):
                             continue
                         result.append(I[b])
                         if s != 0:
                             s = s - 1
 
     for i in range(len(I)):
-        if result.contains(I[i]):
+        if result.__contains__(I[i]):
             continue
         sum = 0
         for k in range(len(I[i])):
@@ -99,7 +99,7 @@ def sort_I(I, m):
                 for b in range(len(result[t])):
                     sum2 += result[t][b]
                 if (sum2 == sum):
-                    if result.contains(I[i]):
+                    if result.__contains__(I[i]):
                         continue
                     result.insert(t + 1, I[i])
 
@@ -116,7 +116,7 @@ def Rid_Maller_size(r, m):
 def Rid_Maller(r, m):
     matrix = np.zeros((Rid_Maller_size(r, m), 2 ** m), dtype=int)
     index = 0
-    for i in get_I_combinations(m, r):
+    for i in get_I_combinations(m, r):  # for i in sort_I(get_I_combinations(m, r), m):
         matrix[index] = get_V_I(i, m)
         index += 1
     return matrix
@@ -139,6 +139,44 @@ def get_H_I(I, m):
     return H_I
 
 
+def major_algorithm(w, r, m):
+    i = r
+    curr_w = w
+    dead_edge = 2 ** (m - r - 1) - 1
+    mi = []
+    check = True
+
+    while check:
+        for J in get_I_combinations(m, i):
+            edge = 2 ** (m - i - 1)
+            zero = 0
+            one = 0
+            for t in get_H_I(J, m):
+                c = np.dot(curr_w, get_V_I_t(get_Komplement(J, m), m, t)) % 2
+                if c == 0:
+                    zero += 1
+                if c == 1:
+                    one += 1
+                if zero > dead_edge and one > dead_edge:
+                    print("Необходима повторная отправка сообщения")
+                    return
+                if zero > edge:
+                    mi.append(0)
+                if one > edge:
+                    mi.append(1)
+                    curr_w = (curr_w + get_V_I(J, m)) % 2
+                if i > 0:
+                    if len(curr_w) < dead_edge:
+                        for J in get_I_combinations(m, r + 1):
+                            mi.append(0)
+                            check = False
+                    i -= 1
+                else:
+                    check = False
+            mi.reverse()
+            return mi
+
+
 if __name__ == '__main__':
-    rm = Rid_Maller(3, 4)
+    rm = Rid_Maller(2, 4)
     print(rm)
