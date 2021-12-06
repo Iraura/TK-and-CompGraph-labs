@@ -1,7 +1,6 @@
 import numpy as np
 from itertools import product
 from itertools import combinations
-from operator import itemgetter
 import math
 
 
@@ -9,11 +8,20 @@ import math
 def get_basis(cols):
     return list(product([0, 1], repeat=cols))
 
-def f(words, I):
+
+def f_meth(words, I):
     f = 1
     for j in I:
         f *= (words[j] + 1) % 2
     return f
+
+
+def f_meth_t(words, I, t):
+    f = 1
+    for j in I:
+        f *= (words[j] + t[j] + 1) % 2
+    return f
+
 
 # Векторная форма, формируем v
 def get_V_I(I, m):
@@ -22,7 +30,18 @@ def get_V_I(I, m):
     else:
         v = []
         for words in get_basis(m):
-            f(words, I)
+            f = f_meth(words, I)
+            v.append(f)
+        return v
+
+
+def get_V_I_t(I, m, t):
+    if len(I) == 0:
+        return np.ones(2 ** m, int)
+    else:
+        v = []
+        for words in get_basis(m):
+            f = f_meth(words, I, t)
             v.append(f)
         return v
 
@@ -39,6 +58,7 @@ def get_I_combinations(m, r):
             if len(i) <= r:
                 boolean.append(i)
     return boolean
+
 
 def sort_I(I, m):
     r = 0
@@ -67,6 +87,7 @@ def sort_I(I, m):
                             s = s - 1
     return result
 
+
 def Rid_Maller_size(r, m):
     size = 0
     for i in range(r + 1):
@@ -82,6 +103,7 @@ def Rid_Maller(r, m):
         index += 1
     return matrix
 
+
 def get_Komplement(I, m):
     komplement = []
     for i in range(m):
@@ -89,19 +111,16 @@ def get_Komplement(I, m):
             komplement.append(i)
     return komplement
 
+
 def get_H_I(I, m):
     H_I = []
     for words in get_basis(m):
-        f = 1
-        for i in I:
-            f *= (words[i] + 1) % 2
+        f = f_meth(words, I)
         if f == 1:
             H_I.append(words)
     return H_I
 
 
-
 if __name__ == '__main__':
-
-    rm = Rid_Maller(3,4)
+    rm = Rid_Maller(3, 4)
     print(rm)
