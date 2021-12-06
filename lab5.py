@@ -79,12 +79,30 @@ def sort_I(I, m):
                     sum = 0
                     for p in range(k):
                         sum += I[b][p]
-                    if (sum == s):
-                        if result.__contains__(I[b]):
+                    if (sum == s) or (s != 1 and s % 2 == 1 and sum == s + 1):
+                        if result.contains(I[b]):
                             continue
                         result.append(I[b])
                         if s != 0:
                             s = s - 1
+
+    for i in range(len(I)):
+        if result.contains(I[i]):
+            continue
+        sum = 0
+        for k in range(len(I[i])):
+            sum += I[i][k]
+
+        for t in range(len(result)):
+            if len(result[t]) == len(I[i]):
+                sum2 = 0
+                for b in range(len(result[t])):
+                    sum2 += result[t][b]
+                if (sum2 == sum):
+                    if result.contains(I[i]):
+                        continue
+                    result.insert(t + 1, I[i])
+
     return result
 
 
