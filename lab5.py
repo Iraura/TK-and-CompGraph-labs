@@ -44,13 +44,7 @@ if __name__ == '__main__':
 
     print()
     print("v = ")
-    # I = [1, 4, 5]
-    # v = get_V_I(I, 3)
-    # print(v)
-
-    boolean = get_I_combinations(4, 3)
-    print(boolean)
-
-# Булеан
-
-print(len(boolean))
+    I = get_I_combinations(4, 3)
+    print(I)
+    v = get_V_I(I[0], 3)
+    print(v)
