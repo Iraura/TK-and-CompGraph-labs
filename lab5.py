@@ -159,31 +159,34 @@ def get_H_I(I, m):
 
 def major_algorithm(w, r, m):
     i = r
-    curr_w = w
-    max_weight = 2 ** (m - r - 1) - 1
+    w_r = w
     mi = []
-
+    max_weight = pow(2, m - r - 1) - 1
     while True:
         for J in sort_for_major(m, i):
-            max_zero_one_count = 2 ** (m - i - 1)
-            zero = 0
-            one = 0
+            max_zeros_and_ones_count = pow(2, m - i - 1)
+            zeros_count, ones_count = 0, 0
             for t in get_H_I(J, m):
-                c = np.dot(curr_w, get_V_I_t(get_Komplement(J, m), m, t)) % 2
+                komp = get_Komplement(J, m)
+                V = get_V_I_t(komp, m, t)
+                c = np.dot(w_r, V) % 2
+
                 if c == 0:
-                    zero += 1
-                if c == 1:
-                    one += 1
-            if zero > max_weight and one > max_weight:
-                print("Необходима повторная отправка сообщения")
+                    zeros_count += 1
+                elif c == 1:
+                    ones_count += 1
+
+            if zeros_count > max_weight and ones_count > max_weight:
                 return
-            if zero > max_zero_one_count:
+            if zeros_count > max_zeros_and_ones_count:
                 mi.append(0)
-            if one > max_zero_one_count:
+            if ones_count > max_zeros_and_ones_count:
                 mi.append(1)
-                curr_w = (curr_w + get_V_I(J, m)) % 2
+                V = get_V_I(J, m)
+                w_r = (w_r + V) % 2
+
         if i > 0:
-            if len(curr_w) < max_weight:
+            if len(w_r) < max_weight:
                 for J in sort_for_major(m, r + 1):
                     mi.append(0)
                 break
