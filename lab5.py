@@ -157,11 +157,12 @@ def get_H_I(I, m):
     return H_I
 
 
-def major_algorithm(w, r, m):
+def major_algorithm(w, r, m, size):
     i = r
     w_r = w
-    Mi = []
+    Mi = np.zeros(size, dtype=int)
     max_weight = pow(2, m - r - 1) - 1
+    index = 0
     while True:
         for J in sort_for_major(m, i):
             max_zeros_and_ones_count = pow(2, m - i - 1)
@@ -179,16 +180,19 @@ def major_algorithm(w, r, m):
             if zeros_count > max_weight and ones_count > max_weight:
                 return
             if zeros_count > max_zeros_and_ones_count:
-                Mi.append(0)
+                Mi[index] = 0
+                index += 1
             if ones_count > max_zeros_and_ones_count:
-                Mi.append(1)
+                Mi[index] = 1
+                index += 1
                 V = get_V_I(J, m)
                 w_r = (w_r + V) % 2
 
         if i > 0:
             if len(w_r) < max_weight:
                 for J in sort_for_major(m, r + 1):
-                    Mi.append(0)
+                    Mi[index] = 0
+                    index += 1
                 break
             i -= 1
         else:
@@ -227,8 +231,9 @@ if __name__ == '__main__':
         Err = generate_word_with_n_mistakes(G, r, m, i)
         print("Слово с ошибкой: \n", Err)
 
-        Correct_W = major_algorithm(Err, r, m)
-        if Correct_W:
-            print("Исправленное слово: \n", Correct_W)
-            V1 = np.dot(Correct_W, G) % 2
-            print("Проверяем, умножив полученный вектор на порожлающую матрицу G(2,4): \n", V1)
+        Correct_W = major_algorithm(Err, r, m, len(G))
+
+        print("Исправленное слово: \n", Correct_W)
+        V2 = Correct_W.dot(G) % 2
+        # V1 = np.dot(Correct_W, G) % 2
+        print("Проверяем, умножив полученный вектор на порожлающую матрицу G(2,4): \n", V2)
