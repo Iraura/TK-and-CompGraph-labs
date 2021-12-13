@@ -160,7 +160,7 @@ def get_H_I(I, m):
 def major_algorithm(w, r, m):
     i = r
     w_r = w
-    mi = []
+    Mi = []
     max_weight = pow(2, m - r - 1) - 1
     while True:
         for J in sort_for_major(m, i):
@@ -179,22 +179,22 @@ def major_algorithm(w, r, m):
             if zeros_count > max_weight and ones_count > max_weight:
                 return
             if zeros_count > max_zeros_and_ones_count:
-                mi.append(0)
+                Mi.append(0)
             if ones_count > max_zeros_and_ones_count:
-                mi.append(1)
+                Mi.append(1)
                 V = get_V_I(J, m)
                 w_r = (w_r + V) % 2
 
         if i > 0:
             if len(w_r) < max_weight:
                 for J in sort_for_major(m, r + 1):
-                    mi.append(0)
+                    Mi.append(0)
                 break
             i -= 1
         else:
             break
-    reversed(mi)
-    return mi
+    reversed(Mi)
+    return Mi
 
 
 def generate_word_with_n_mistakes(G, r, m, error_count):
