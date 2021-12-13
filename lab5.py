@@ -164,8 +164,8 @@ def major_algorithm(w, r, m):
     mi = []
 
     while True:
+        max_zero_one_count = 2 ** (m - i - 1)
         for J in sort_for_major(m, i):
-            max_zero_one_count = 2 ** (m - i - 1)
             zero = 0
             one = 0
             for t in get_H_I(J, m):
