@@ -232,8 +232,12 @@ if __name__ == '__main__':
         print("Слово с ошибкой: \n", Err)
 
         Correct_W = major_algorithm(Err, r, m, len(G))
+        if Correct_W is None:
+            print("Необходима повторная отправка сообщения")
+        else:
+            print("Исправленное слово: \n", Correct_W)
+            V2 = Correct_W.dot(G) % 2
+            print("Проверяем, умножив полученный вектор на порожлающую матрицу G(2,4): \n", V2)
+         # V1 = np.dot(Correct_W, G) % 2
 
-        print("Исправленное слово: \n", Correct_W)
-        V2 = Correct_W.dot(G) % 2
-        # V1 = np.dot(Correct_W, G) % 2
-        print("Проверяем, умножив полученный вектор на порожлающую матрицу G(2,4): \n", V2)
+
