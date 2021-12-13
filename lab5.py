@@ -193,7 +193,7 @@ def major_algorithm(w, r, m):
             i -= 1
         else:
             break
-    mi.reverse()
+    reversed(mi)
     return mi
 
 
