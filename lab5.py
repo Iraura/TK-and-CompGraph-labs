@@ -2,6 +2,8 @@ import numpy as np
 from itertools import product
 from itertools import combinations
 import math
+import random
+from operator import itemgetter
 
 
 # формируем бинарную матрицу размерности m столбцов
@@ -106,6 +108,22 @@ def sort_I(I, m):
     return result
 
 
+def sort_for_major(m, l):
+    I = np.zeros(m, dtype=int)
+    for i in range(m):
+        I[i] = i
+
+    cur = []
+
+    cur.append([list(combinations(I, l))])
+    if len(cur[0][0]) != 0:
+        cur[0].sort(key=itemgetter(len(cur[0][0]) - 1))
+    res = []
+    for i in range(len(cur[0])):
+        res.append(cur[0][i])
+    return res
+
+
 def Rid_Maller_size(r, m):
     size = 0
     for i in range(r + 1):
@@ -114,7 +132,8 @@ def Rid_Maller_size(r, m):
 
 
 def Rid_Maller(r, m):
-    matrix = np.zeros((Rid_Maller_size(r, m), 2 ** m), dtype=int)
+    size = Rid_Maller_size(r, m)
+    matrix = np.zeros((size, pow(2, m)), dtype=int)
     index = 0
     for i in get_I_combinations(m, r):  # for i in sort_I(get_I_combinations(m, r), m):
         matrix[index] = get_V_I(i, m)
@@ -147,7 +166,7 @@ def major_algorithm(w, r, m):
     check = True
 
     while check:
-        for J in get_I_combinations(m, i):
+        for J in sort_for_major(m, i):
             edge = 2 ** (m - i - 1)
             zero = 0
             one = 0
@@ -157,26 +176,58 @@ def major_algorithm(w, r, m):
                     zero += 1
                 if c == 1:
                     one += 1
-                if zero > dead_edge and one > dead_edge:
-                    print("Необходима повторная отправка сообщения")
-                    return
-                if zero > edge:
+            if zero > dead_edge and one > dead_edge:
+                print("Необходима повторная отправка сообщения")
+                return
+            if zero > edge:
+                mi.append(0)
+            if one > edge:
+                mi.append(1)
+                curr_w = (curr_w + get_V_I(J, m)) % 2
+        if i > 0:
+            if len(curr_w) < dead_edge:
+                for J in sort_for_major(m, r + 1):
                     mi.append(0)
-                if one > edge:
-                    mi.append(1)
-                    curr_w = (curr_w + get_V_I(J, m)) % 2
-                if i > 0:
-                    if len(curr_w) < dead_edge:
-                        for J in get_I_combinations(m, r + 1):
-                            mi.append(0)
-                            check = False
-                    i -= 1
-                else:
                     check = False
-            mi.reverse()
-            return mi
+            i -= 1
+        else:
+            check = False
+    mi.reverse()
+    return mi
+
+
+def generate_word_with_n_mistakes(G, r, m, error_count):
+    u = np.zeros(Rid_Maller_size(r, m), dtype=int)
+    for i in range(len(u)):
+        u[i] = random.randint(0, 1)
+    print("Исходное слово", u)
+    u = u.dot(G)
+    u %= 2
+    err_arr = np.full(error_count, len(u) + 1, dtype=int)
+    for k in range(error_count):
+        mistake_pos = random.randint(0, len(u) - 1)
+        while mistake_pos in err_arr:
+            mistake_pos = random.randint(0, len(u) - 1)
+        err_arr[k] = mistake_pos
+        u[mistake_pos] += 1
+        u[mistake_pos] %= 2
+    return u
 
 
 if __name__ == '__main__':
-    rm = Rid_Maller(2, 4)
-    print(rm)
+    # rm = Rid_Maller(2, 4)
+    # print(rm)
+    m = 4
+    r = 2
+    G = Rid_Maller(r, m)
+    print("Порождающая матрица : \n", G)
+
+    for i in range(1, 3):
+        Err = generate_word_with_n_mistakes(G, r, m, i)
+        print("Слово с ошибкой: \n", Err)
+
+        Correct_W = major_algorithm(Err, r, m)
+        if Correct_W:
+            print("Исправленное слово: \n", Correct_W)
+            V1 = np.dot(Correct_W, G) % 2
+            print("Проверяем, умножив полученный вектор на порожлающую матрицу G(2,4): \n", V1)
