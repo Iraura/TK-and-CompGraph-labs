@@ -160,13 +160,12 @@ def get_H_I(I, m):
 def major_algorithm(w, r, m):
     i = r
     curr_w = w
-    dead_edge = 2 ** (m - r - 1) - 1
+    max_weight = 2 ** (m - r - 1) - 1
     mi = []
-    check = True
 
-    while check:
+    while True:
         for J in sort_for_major(m, i):
-            edge = 2 ** (m - i - 1)
+            max_zero_one_count = 2 ** (m - i - 1)
             zero = 0
             one = 0
             for t in get_H_I(J, m):
@@ -175,22 +174,22 @@ def major_algorithm(w, r, m):
                     zero += 1
                 if c == 1:
                     one += 1
-            if zero > dead_edge and one > dead_edge:
+            if zero > max_weight and one > max_weight:
                 print("Необходима повторная отправка сообщения")
                 return
-            if zero > edge:
+            if zero > max_zero_one_count:
                 mi.append(0)
-            if one > edge:
+            if one > max_zero_one_count:
                 mi.append(1)
                 curr_w = (curr_w + get_V_I(J, m)) % 2
         if i > 0:
-            if len(curr_w) < dead_edge:
+            if len(curr_w) < max_weight:
                 for J in sort_for_major(m, r + 1):
                     mi.append(0)
-                    check = False
+                break
             i -= 1
         else:
-            check = False
+            break
     mi.reverse()
     return mi
 
