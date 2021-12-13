@@ -108,20 +108,19 @@ def sort_I(I, m):
     return result
 
 
-def sort_for_major(m, l):
-    I = np.zeros(m, dtype=int)
+def sort_for_major(m, r):
+    iterable = np.zeros(m, dtype=int)
     for i in range(m):
-        I[i] = i
+        iterable[i] = i
 
-    cur = []
+    temp = list(combinations(iterable, r))
+    if len(temp[0]) != 0:
+        temp.sort(key=itemgetter(len(temp[0]) - 1))
 
-    cur.append([list(combinations(I, l))])
-    if len(cur[0][0]) != 0:
-        cur[0].sort(key=itemgetter(len(cur[0][0]) - 1))
-    res = []
-    for i in range(len(cur[0])):
-        res.append(cur[0][i])
-    return res
+    result = list(np.zeros(math.comb(m, r), dtype=int))
+    for i in range(len(temp)):
+        result[i] = temp[i]
+    return result
 
 
 def Rid_Maller_size(r, m):
