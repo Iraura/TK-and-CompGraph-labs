@@ -6,18 +6,18 @@ import random
 from operator import itemgetter
 
 
-# формируем бинарную матрицу размерности m столбцов
+# Формируем бинарную матрицу размерности m столбцов
 def get_basis(cols):
     return list(product([0, 1], repeat=cols))
 
-
+# Считаем f_I
 def f_meth(words, I):
     f = 1
     for j in I:
         f *= (words[j] + 1) % 2
     return f
 
-
+# Считаем f_I_t
 def f_meth_t(words, I, t):
     f = 1
     for j in I:
@@ -25,7 +25,7 @@ def f_meth_t(words, I, t):
     return f
 
 
-# Векторная форма, формируем v
+# Получаем вектор v_I
 def get_V_I(I, m):
     if len(I) == 0:
         return np.ones(2 ** m, int)
@@ -36,7 +36,7 @@ def get_V_I(I, m):
             v.append(f)
         return v
 
-
+# Получаем вектор v_I_t
 def get_V_I_t(I, m, t):
     if len(I) == 0:
         return np.ones(2 ** m, int)
@@ -47,7 +47,7 @@ def get_V_I_t(I, m, t):
             v.append(f)
         return v
 
-
+# Получаем комбинации I
 def get_I_combinations(m, r):
     multiplicity = np.zeros(m, int)
     boolean = list()
@@ -61,7 +61,7 @@ def get_I_combinations(m, r):
                 boolean.append(i)
     return boolean
 
-
+# Сортировка
 def sort_I(I, m):
     r = 0
     result = []
@@ -107,7 +107,7 @@ def sort_I(I, m):
 
     return result
 
-
+# Сортировка для декодирования
 def sort_for_major(m, r):
     iterable = np.zeros(m, dtype=int)
     for i in range(m):
@@ -122,14 +122,14 @@ def sort_for_major(m, r):
         result[i] = temp[i]
     return result
 
-
+# Размер порождающей матрицы кода Рида Маллера
 def Rid_Maller_size(r, m):
     size = 0
     for i in range(r + 1):
         size += math.comb(m, i)
     return size
 
-
+# Формирование порождающей матрицы G
 def Rid_Maller(r, m):
     size = Rid_Maller_size(r, m)
     matrix = np.zeros((size, pow(2, m)), dtype=int)
@@ -139,7 +139,7 @@ def Rid_Maller(r, m):
         index += 1
     return matrix
 
-
+# Формирование комплиментарного множества
 def get_Komplement(I, m):
     komplement = []
     for i in range(m):
@@ -147,7 +147,7 @@ def get_Komplement(I, m):
             komplement.append(i)
     return komplement
 
-
+# Ищем строки, где f_I = 1
 def get_H_I(I, m):
     H_I = []
     for words in get_basis(m):
@@ -157,6 +157,7 @@ def get_H_I(I, m):
     return H_I
 
 
+# Мажоритарное декодирование
 def major_algorithm(w, r, m, size):
     i = r
     w_r = w
@@ -200,12 +201,13 @@ def major_algorithm(w, r, m, size):
     reversed(Mi)
     return Mi
 
-
+# Функция генерации n-кратной ошибки
 def generate_word_with_n_mistakes(G, r, m, error_count):
     u = np.zeros(Rid_Maller_size(r, m), dtype=int)
     for i in range(len(u)):
         u[i] = random.randint(0, 1)
     print("Исходное слово", u)
+    print()
     u = u.dot(G)
     u %= 2
     err_arr = np.full(error_count, len(u) + 1, dtype=int)
@@ -222,18 +224,46 @@ def generate_word_with_n_mistakes(G, r, m, error_count):
 if __name__ == '__main__':
     # rm = Rid_Maller(2, 4)
     # print(rm)
-    m = 4
-    r = 2
-    G = Rid_Maller(r, m)
-    print("Порождающая матрица : \n", G)
+    # m, r = 4, 2
 
-    for i in range(1, 3):
-        Err = generate_word_with_n_mistakes(G, r, m, i)
-        print("Слово с ошибкой: \n", Err)
+    G = Rid_Maller(2, 4)
+    print("Порождающая матрица G(2, 4): \n\n", G)
+    print("_____________________________ \n")
 
-        Correct_W = major_algorithm(Err, r, m, len(G))
+    # Эксперимент для однократной ошибки
+    Err = generate_word_with_n_mistakes(G, 2, 4, 1)
+    print("Слово с однократной ошибкой: \n", Err)
+    print()
 
-        print("Исправленное слово: \n", Correct_W)
-        V2 = Correct_W.dot(G) % 2
-        # V1 = np.dot(Correct_W, G) % 2
-        print("Проверяем, умножив полученный вектор на порожлающую матрицу G(2,4): \n", V2)
+    Decoded_word = major_algorithm(Err, 2, 4, len(G))
+    if Decoded_word is None:
+        print("Необходима повторная отправка сообщения!!!")
+        print()
+    else:
+        print("Исправленное слово: \n", Decoded_word)
+        print()
+        V2 = Decoded_word.dot(G) % 2
+        print("Результат умножения исправленного слова на матрицу G: \n", V2)
+        print()
+
+
+    # Эксперимент для двукратной ошибки
+    print("_____________________________ \n")
+    Err = generate_word_with_n_mistakes(G, 2, 4, 2)
+    print("Слово с двукратной ошибкой: \n", Err)
+    print()
+
+    Decoded_word = major_algorithm(Err, 2, 4, len(G))
+    if Decoded_word is None:
+        print("Необходима повторная отправка сообщения!!!")
+        print()
+    else:
+        print("Исправленное слово: \n", Decoded_word)
+        print()
+        V2 = Decoded_word.dot(G) % 2
+        print("Результат умножения исправленного слова на матрицу G: \n", V2)
+        print()
+
+
+
+
