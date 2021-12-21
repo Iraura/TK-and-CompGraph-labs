@@ -7,9 +7,7 @@ def coding_with_errors(g, n, error_count):
         u[i] = random.randint(0, 1)
     print("ИСХОДНОЕ", u)
     result = np.polymul(u, g)
-    # print("polimul", result)
     result %= 2
-    # print("Исходное слово", result)
 
     err_arr = np.zeros(error_count, dtype=int)
     for k in range(error_count):
@@ -68,14 +66,24 @@ def decoding(g, t, w, isPaket):
         s_i = np.polydiv(mult, g)[1]
         s_i %= 2
         # wt(s_i)
-        if sum(s_i) <= t or isPaket:
-            e_i = np.zeros(n, dtype=int)
-            e_i[i - 1] = 1
-            e_x = np.polymul(e_i, s_i)
-            e_x %= 2
-            sumPoly = np.polyadd(e_x, w)
-            sumPoly %= 2
-            return np.polydiv(sumPoly, g)[0] % 2
+        if isPaket:
+            if is_this_err(s_i, t):
+                e_i = np.zeros(n, dtype=int)
+                e_i[i - 1] = 1
+                e_x = np.polymul(e_i, s_i)
+                e_x %= 2
+                sumPoly = np.polyadd(e_x, w)
+                sumPoly %= 2
+                return np.polydiv(sumPoly, g)[0] % 2
+        else:
+            if sum(s_i) <= t:
+                e_i = np.zeros(n, dtype=int)
+                e_i[i - 1] = 1
+                e_x = np.polymul(e_i, s_i)
+                e_x %= 2
+                sumPoly = np.polyadd(e_x, w)
+                sumPoly %= 2
+                return np.polydiv(sumPoly, g)[0] % 2
     return None
 
 
