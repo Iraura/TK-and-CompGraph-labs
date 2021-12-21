@@ -6,10 +6,12 @@ def coding_with_errors(g, n, error_count):
     u = np.zeros(n, dtype=int)
     for i in range(n):
         u[i] = random.randint(0, 1)
-    print("Исходное слово", u)
+    #print(u)
     result = np.polymul(u, g)
     # print("polimul", result)
     result %= 2
+    print("Исходное слово", result)
+
 
     err_arr = np.zeros(error_count, dtype=int)
     for k in range(error_count):
@@ -24,19 +26,25 @@ def coding_with_errors(g, n, error_count):
 
 def decoding(g, t, w):
     n = len(w)
-    s = np.polydiv(w, g)[1]  # остаток
+    s = np.polydiv(w, g)[1] # остаток
+    s %= 2
     for i in range(n):
         e_x = np.zeros(n, dtype=int)
         e_x[i] = 1
         mult = np.polymul(s, e_x)
+        mult %= 2
 
         s_i = np.polydiv(mult, g)[1]
+        s_i %= 2
         # wt(s_i)
         if sum(s_i) <= t:
             e_i = np.zeros(n, dtype=int)
             e_i[i] = 1
             e_x = np.polymul(e_i, s_i)
-            return np.polyadd(e_x, w)
+            e_x %= 2
+            sumPoly = np.polyadd(e_x, w)
+            sumPoly %= 2
+            return sumPoly
     return None
 
 
@@ -50,11 +58,10 @@ if __name__ == '__main__':
     print()
 
     for i in range(1, 4):
-        u = coding_with_errors(g1, 4, i)
         print(i, "mistakes")
-        print(u)
+        u = coding_with_errors(g1, 4, i)
         decoded = decoding(g1, t, u)
-        print("decoded hueta multidick", decoded)
+        print("Декодированное ", decoded)
 
         print()
 
