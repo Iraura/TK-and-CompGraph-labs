@@ -31,16 +31,8 @@ def getPackError(n, t):
     return pack_error
 
 def is_this_err(error, t):
-    for i in range(len(error)):
-        if not error[i]:
-            error.remove(i)
-        else:
-            break
-    for j in reversed(error):
-        if not error[j]:
-            error.remove(j)
-        else:
-            break
+    np.trim_zeros(error, 'f')
+    np.trim_zeros(error, 'b')
     return len(error) <= t and len(error) != 0
 
 def coding_with_pack_error(g, n, error_count):
