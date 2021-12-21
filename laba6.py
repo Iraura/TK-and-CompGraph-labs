@@ -28,14 +28,16 @@ def decoding(g, t, w):
     for i in range(n):
         e_x = np.zeros(n, dtype=int)
         e_x[i] = 1
-        mult = np.polymuls(s, e_x)
+        mult = np.polymul(s, e_x)
 
         s_i = np.polydiv(mult, g)[1]
+        # wt(s_i)
         if sum(s_i) <= t:
-            e_0 = np.zeros(n, dtype=int)
-            e_0[n-1] = 1
-            e_n = np.zeros(n, dtype=int)
-            e_n[0] = 1
+            e_i = np.zeros(n, dtype=int)
+            e_i[i] = 1
+            e_x = np.polymul(e_i, s_i)
+            return np.polyadd(e_x, w)
+    return None
 
 
 if __name__ == '__main__':
@@ -51,7 +53,12 @@ if __name__ == '__main__':
         u = coding_with_errors(g1, 4, i)
         print(i, "mistakes")
         print(u)
+        decoded = decoding(g1, t, u)
+        print("decoded hueta multidick", decoded)
+
         print()
+
+
 
     # _______________________________________________
     n2 = 15
