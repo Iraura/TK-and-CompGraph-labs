@@ -102,7 +102,7 @@ def task_1():
 
 if __name__ == '__main__':
     # task_1()
-    pic = Picture(512, 512, 3)
+    pic = Picture(200, 200, 3)
     colour = Colour([255, 255, 255])
 
     star_builder(line_builder_variant_1)
