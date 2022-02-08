@@ -12,6 +12,13 @@ class Picture:
         self.picture_array = array
 
 
+class Colour:
+    colour_array = [0, 0, 0]
+
+    def __init__(self, colour_array):
+        self.colour_array = colour_array
+
+
 def create_coloured_square(h, w, colour_array):
     data = np.zeros((h, w, 3), dtype=np.uint8)
     data[0:512, 0:512] = colour_array
