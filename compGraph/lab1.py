@@ -26,6 +26,10 @@ class Picture:
         img = Image.fromarray(self.picture_array, 'RGB')
         img.show()
 
+    def clear(self):
+        self.picture_array.fill(0)
+
+
 
 def create_coloured_square(h, w, colour_array):
     data = np.zeros((h, w, 3), dtype=np.uint8)
@@ -141,9 +145,13 @@ if __name__ == '__main__':
     # task №3
     delta_t = 0.01
     star_builder(line_builder_variant_1, delta_t)
+    pic.clear()
 
     star_builder(line_builder_variant_2, delta_t)
+    pic.clear()
 
     star_builder(line_builder_variant_3, delta_t)
+    pic.clear()
 
     star_builder(line_builder_variant_4, delta_t)
+    pic.clear()
