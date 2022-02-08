@@ -47,24 +47,24 @@ def create_square_with_diff_colours(w, h):
     img.show()
 
 
+def star_builder(variant, delta_t):
+    for i in range(13):
+        a = (2 * np.pi * i) / 13
+        variant(100 + 95 * np.cos(a), 100 + 95 * np.sin(a), 100, 100, pic, colour, delta_t)
+
+
 # exception if we go from last index to center
-def line_builder_variant_1(x1, y1, x0, y0, pic: Picture, colour: Colour):
+def line_builder_variant_1(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t=0.1):
     t = 0.0
     while t < 1.0:
         x = x0 * (1.0 - t) + x1 * t
         y = y0 * (1.0 - t) + y1 * t
         pic.set_pixel(x, y, colour)
-        t += 0.01
-
-
-def star_builder(variant):
-    for i in range(12):
-        a = (2 * np.pi * i) / 13
-        variant(100 + 95 * np.cos(a), 100 + 95 * np.sin(a), 100, 100, pic, colour)
+        t += delta_t
 
 
 # if x1 = 0 then we will not get any image because of (x1 - x0) < 0
-def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour):
+def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t):
     x = x0
     while x <= x1:
         t = (x - x0) / (x1 - x0)
@@ -73,7 +73,7 @@ def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour):
         x += 1
 
 
-def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour):
+def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t=0.0):
     sleep = False
     x = x0
     if abs(x0 - x1) < abs(y0 - y1):
@@ -105,5 +105,5 @@ if __name__ == '__main__':
     pic = Picture(200, 200, 3)
     colour = Colour([255, 255, 255])
 
-    star_builder(line_builder_variant_1)
+    star_builder(line_builder_variant_3, 0.1)
     pic.show_picture()
