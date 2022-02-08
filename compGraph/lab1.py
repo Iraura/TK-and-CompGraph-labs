@@ -147,6 +147,10 @@ if __name__ == '__main__':
     star_builder(line_builder_variant_1, delta_t)
     pic.clear()
 
+    delta_t = 0.1
+    star_builder(line_builder_variant_1, delta_t)
+    pic.clear()
+
     star_builder(line_builder_variant_2, delta_t)
     pic.clear()
 
