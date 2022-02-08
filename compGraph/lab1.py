@@ -56,11 +56,11 @@ def line_builder_variant_1(x1, y1, x0, y0, pic: Picture, colour: Colour):
         pic.set_pixel(x, y, colour)
         t += 0.01
 
+
 def star_builder(variant):
-    for i in range (12):
+    for i in range(12):
         a = (2 * np.pi * i) / 13
         variant(100 + 95 * np.cos(a), 100 + 95 * np.sin(a), 100, 100, pic, colour)
-
 
 
 # if x1 = 0 then we will not get any image because of (x1 - x0) < 0
