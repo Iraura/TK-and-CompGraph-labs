@@ -30,7 +30,6 @@ class Picture:
         self.picture_array.fill(0)
 
 
-
 def create_coloured_square(h, w, colour_array):
     data = np.zeros((h, w, 3), dtype=np.uint8)
     data[0:512, 0:512] = colour_array
@@ -116,7 +115,7 @@ def line_builder_variant_4(x1, y1, x0, y0, pic: Picture, colour: Colour, delts_t
     error = 0.
     y = y0
 
-    for x in (x0, x1):
+    for x in range(int(x0), int(x1) + 1):
         if sleep:
             pic.set_pixel(y, x, colour)
         else:
