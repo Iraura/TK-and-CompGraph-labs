@@ -2,6 +2,13 @@ from PIL import Image
 import numpy as np
 
 
+class Colour:
+    colour_array = [0, 0, 0]
+
+    def __init__(self, colour_array):
+        self.colour_array = colour_array
+
+
 class Picture:
     picture_array = np.zeros((512, 512, 3), dtype=np.uint8)
 
@@ -11,12 +18,12 @@ class Picture:
     def create_from_array(self, array):
         self.picture_array = array
 
+    def set_pixel(self, x, y, color: Colour):
+        self.picture_array[int(x), int(y)] = color.colour_array
 
-class Colour:
-    colour_array = [0, 0, 0]
-
-    def __init__(self, colour_array):
-        self.colour_array = colour_array
+    def show_picture(self):
+        img = Image.fromarray(self.picture_array, 'RGB')
+        img.show()
 
 
 def create_coloured_square(h, w, colour_array):
@@ -40,6 +47,25 @@ def create_square_with_diff_colours(w, h):
     img.show()
 
 
+# exception if we go from last index to center
+def line_builder_variant_1(x1, y1, x0, y0, pic: Picture, colour: Colour):
+    t = 0.0
+    while t < 1.0:
+        x = x0 * (1.0 - t) + x1 * t
+        y = y0 * (1.0 - t) + y1 * t
+        pic.set_pixel(x, y, colour)
+        t += 0.01
+
+
+def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour):
+    t = 0.0
+    while x <= x1:
+        x = x0 * (1.0 - t) + x1 * t
+        y = y0 * (1.0 - t) + y1 * t
+        pic.set_pixel(x, y, colour)
+        t += 0.01
+
+
 def task_1():
     create_coloured_square(512, 512, [0, 0, 0])
     create_coloured_square(512, 512, [255, 255, 255])
@@ -48,4 +74,8 @@ def task_1():
 
 
 if __name__ == '__main__':
-    task_1()
+    # task_1()
+    pic = Picture(512, 512, 3)
+    colour = Colour([255, 255, 255])
+    line_builder_variant_1(512, 512, 256, 256, pic, colour)
+    pic.show_picture()
