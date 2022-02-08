@@ -68,11 +68,22 @@ def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour):
 
 
 def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour):
+    sleep = False
     x = x0
+    if abs(x0 - x1) < abs(y0 - y1):
+        x0, y0 = y0, x0
+        x1, y1 = y1, x1
+        sleep = True
+    if x0 > x1:
+        x0, x1 = x1, x0
+        y0, y1 = y1, y0
     while x <= x1:
         t = (x - x0) / (x1 - x0)
         y = y0 * (1.0 - t) + y1 * t
-        pic.set_pixel(x, y, colour)
+        if sleep:
+            pic.set_pixel(x, y, colour)
+        else:
+            pic.set_pixel(y, x, colour)
         x += 1
 
 
@@ -87,5 +98,5 @@ if __name__ == '__main__':
     # task_1()
     pic = Picture(512, 512, 3)
     colour = Colour([255, 255, 255])
-    line_builder_variant_1(512, 512, 256, 256, pic, colour)
+    line_builder_variant_3(511, 511, 256, 256, pic, colour)
     pic.show_picture()
