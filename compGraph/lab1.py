@@ -57,13 +57,23 @@ def line_builder_variant_1(x1, y1, x0, y0, pic: Picture, colour: Colour):
         t += 0.01
 
 
+# if x1 = 0 then we will not get any image because of (x1 - x0) < 0
 def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour):
-    t = 0.0
+    x = x0
     while x <= x1:
-        x = x0 * (1.0 - t) + x1 * t
+        t = (x - x0) / (x1 - x0)
         y = y0 * (1.0 - t) + y1 * t
         pic.set_pixel(x, y, colour)
-        t += 0.01
+        x += 1
+
+
+def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour):
+    x = x0
+    while x <= x1:
+        t = (x - x0) / (x1 - x0)
+        y = y0 * (1.0 - t) + y1 * t
+        pic.set_pixel(x, y, colour)
+        x += 1
 
 
 def task_1():
