@@ -2,6 +2,7 @@ from PIL import Image
 import numpy as np
 
 
+# task №2
 class Colour:
     colour_array = [0, 0, 0]
 
@@ -51,6 +52,7 @@ def star_builder(variant, delta_t):
     for i in range(13):
         a = (2 * np.pi * i) / 13
         variant(100 + 95 * np.cos(a), 100 + 95 * np.sin(a), 100, 100, pic, colour, delta_t)
+    pic.show_picture()
 
 
 # exception if we go from last index to center
@@ -93,6 +95,37 @@ def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t
         x += 1
 
 
+def line_builder_variant_4(x1, y1, x0, y0, pic: Picture, colour: Colour, delts_t=0.0):
+    sleep = False
+    if abs(x0 - x1) < abs(y0 - y1):
+        x0, y0 = y0, x0
+        x1, y1 = y1, x1
+        sleep = True
+
+    if x0 > x1:
+        x0, x1 = x1, x0
+        y0, y1 = y1, y0
+
+    d_x = x1 - x0
+    d_y = y1 - y0
+    d_error = abs(d_y / float(d_x))
+    error = 0.
+    y = y0
+
+    for x in (x0, x1):
+        if sleep:
+            pic.set_pixel(y, x, colour)
+        else:
+            pic.set_pixel(x, y, colour)
+        error += d_error
+        if error > 0.5:
+            if y1 > y0:
+                y += 1
+            else:
+                y -= 1
+            error -= 1.
+
+
 def task_1():
     create_coloured_square(512, 512, [0, 0, 0])
     create_coloured_square(512, 512, [255, 255, 255])
@@ -101,9 +134,16 @@ def task_1():
 
 
 if __name__ == '__main__':
-    # task_1()
+    # task №1
     pic = Picture(200, 200, 3)
     colour = Colour([255, 255, 255])
 
-    star_builder(line_builder_variant_3, 0.1)
-    pic.show_picture()
+    # task №3
+    delta_t = 0.01
+    star_builder(line_builder_variant_1, delta_t)
+
+    star_builder(line_builder_variant_2, delta_t)
+
+    star_builder(line_builder_variant_3, delta_t)
+
+    star_builder(line_builder_variant_4, delta_t)
