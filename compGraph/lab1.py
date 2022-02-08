@@ -8,5 +8,21 @@ def task1(w, h):
     img.show()
 
 
+class Color (object):
+
+    def __init__(self, r, g, b):
+        self.r = r
+        self.g = g
+        self.b = b
+
+
+class Picture (object):
+
+    def __init__(self, height, weight):
+        self.height = height
+        self.weight = weight
+
+
+
 if __name__ == '__main__':
     task1(512, 512)
