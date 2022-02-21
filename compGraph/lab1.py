@@ -37,7 +37,7 @@ class Picture:
         self.picture_array[0:self.h, 0:self.w] = self.default_colour
 
 
-def create_string_matrix_from_obj_file(filename):
+def create_string_pixel_matrix_from_obj_file(filename):
     f = open(filename)
     s = f.read().split('\n')
     source = list()
@@ -48,6 +48,24 @@ def create_string_matrix_from_obj_file(filename):
     for i in source:
         workspace.append(i.split())
     return workspace
+
+
+def create_string_polygon_matrix_from_obj_file(filename):
+    f = open(filename)
+    s = f.read().split('\n')
+    source = list()
+    for i in s:
+        if len(i) != 0 and i[0] == 'f' and i[1] == ' ':
+            source.append(i)
+    workspace = list()
+    for i in source:
+        workspace.append(i.split())
+
+    result = list()
+    for i in workspace:
+        result.append([i[1].split('/')[0], i[2].split('/')[0], i[3].split('/')[0]])
+
+    return result
 
 
 def create_coloured_square(h, w, colour_array):
@@ -75,7 +93,7 @@ def star_builder(variant, delta_t, pic_star, pic_colour):
     for i in range(13):
         a = (2 * np.pi * i) / 13
         variant(100 + 95 * np.cos(a), 100 + 95 * np.sin(a), 100, 100, pic_star, pic_colour, delta_t)
-    pic.show_picture()
+    pic_star.show_picture()
 
 
 # exception if we go from last index to center
@@ -180,13 +198,35 @@ def task_3():
     pic.clear()
 
 
-if __name__ == '__main__':
-    default_picture_colour = Colour([255, 255, 255])
-    colour = Colour([0, 0, 0])
+def task_5_6(multy, sum):
+    default_picture_colour = Colour([0, 0, 0])
+    colour = Colour([255, 255, 255])
     pic = Picture(1000, 1000, default_picture_colour)
-    from_file_list = create_string_matrix_from_obj_file('StormTrooper.obj')
-    for i in range(1, len(from_file_list)):
-        x1 = float(from_file_list[i][1])
-        line_builder_variant_1(float(from_file_list[i][1]), float(from_file_list[i][2]),
-                               float(from_file_list[i - 1][1]), float(from_file_list[i - 1][2]), pic, colour, 1000)
+    top_array = create_string_pixel_matrix_from_obj_file('StormTrooper.obj')
+    polygon_map = create_string_polygon_matrix_from_obj_file('StormTrooper.obj')
+    for i in range(1, len(top_array)):
+        line_builder_variant_1(float(top_array[i][1]) * multy + sum, float(top_array[i][2]) * multy + sum,
+                               float(top_array[i - 1][1]) * multy + sum,
+                               float(top_array[i - 1][2]) * multy + sum,
+                               pic, colour, 1000)
+    for i in polygon_map:
+        i_0 = int(i[0])
+        i_1 = int(i[1])
+        i_2 = int(i[2])
+        line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
+                               float(top_array[i_1 - 1][1]) * multy + sum + 1,
+                               float(top_array[i_1 - 1][2]) * multy + sum + 1,
+                               pic, colour, 1000)
+        line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
+                               float(top_array[i_2 - 1][1]) * multy + sum + 1,
+                               float(top_array[i_2 - 1][2]) * multy + sum + 1,
+                               pic, colour, 1000)
+        line_builder_variant_4(float(top_array[i_1 - 1][1]) * multy + sum, float(top_array[i_1 - 1][2]) * multy + sum,
+                               float(top_array[i_2 - 1][1]) * multy + sum + 1,
+                               float(top_array[i_2 - 1][2]) * multy + sum + 1,
+                               pic, colour, 1000)
     pic.show_picture()
+
+
+if __name__ == '__main__':
+    task_5_6(100, 500)
