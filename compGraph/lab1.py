@@ -29,6 +29,18 @@ class Picture:
     def clear(self):
         self.picture_array.fill(0)
 
+    def create_from_obj_file(self, filename):
+        f = open(filename)
+        s = f.read().split('\n')
+        source = list()
+        for i in s:
+            if len(i) != 0 and i[0] == 'v' and i[1] == ' ':
+                source.append(i)
+        workspace = list()
+        for i in source:
+            workspace.append(i.split())
+        self.picture_array = workspace
+
 
 def create_coloured_square(h, w, colour_array):
     data = np.zeros((h, w, 3), dtype=np.uint8)
