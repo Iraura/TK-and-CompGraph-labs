@@ -170,3 +170,6 @@ if __name__ == '__main__':
 
     star_builder(line_builder_variant_4, delta_t)
     pic.clear()
+
+    img = Picture(1000, 1000, 3)
+    img.create_from_obj_file('StormTrooper.obj')
