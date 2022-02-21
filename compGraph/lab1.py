@@ -11,10 +11,17 @@ class Colour:
 
 
 class Picture:
-    picture_array = np.zeros((512, 512, 3), dtype=np.uint8)
+    h = 512
+    w = 512
+    picture_array = np.zeros((h, w, 3), dtype=np.uint8)
+    default_colour = [0, 0, 0]
 
-    def __init__(self, h, w, d):
-        self.picture_array = np.zeros((h, w, d), dtype=np.uint8)
+    def __init__(self, h, w, col: Colour):
+        self.h = h
+        self.w = w
+        self.picture_array = np.zeros((h, w, 3), dtype=np.uint8)
+        self.default_colour = col.colour_array
+        self.picture_array[0:h, 0:w] = col.colour_array
 
     def create_from_array(self, array):
         self.picture_array = array
@@ -27,19 +34,20 @@ class Picture:
         img.show()
 
     def clear(self):
-        self.picture_array.fill(0)
+        self.picture_array[0:self.h, 0:self.w] = self.default_colour
 
-    def create_from_obj_file(self, filename):
-        f = open(filename)
-        s = f.read().split('\n')
-        source = list()
-        for i in s:
-            if len(i) != 0 and i[0] == 'v' and i[1] == ' ':
-                source.append(i)
-        workspace = list()
-        for i in source:
-            workspace.append(i.split())
-        self.picture_array = workspace
+
+def create_string_matrix_from_obj_file(filename):
+    f = open(filename)
+    s = f.read().split('\n')
+    source = list()
+    for i in s:
+        if len(i) != 0 and i[0] == 'v' and i[1] == ' ':
+            source.append(i)
+    workspace = list()
+    for i in source:
+        workspace.append(i.split())
+    return workspace
 
 
 def create_coloured_square(h, w, colour_array):
@@ -63,10 +71,10 @@ def create_square_with_diff_colours(w, h):
     img.show()
 
 
-def star_builder(variant, delta_t):
+def star_builder(variant, delta_t, pic_star, pic_colour):
     for i in range(13):
         a = (2 * np.pi * i) / 13
-        variant(100 + 95 * np.cos(a), 100 + 95 * np.sin(a), 100, 100, pic, colour, delta_t)
+        variant(100 + 95 * np.cos(a), 100 + 95 * np.sin(a), 100, 100, pic_star, pic_colour, delta_t)
     pic.show_picture()
 
 
@@ -148,25 +156,37 @@ def task_1():
     create_square_with_diff_colours(512, 512)
 
 
-if __name__ == '__main__':
-    # task №1
-    pic = Picture(200, 200, 3)
-    colour = Colour([255, 255, 255])
+def task_3():
+    default_picture_colour = Colour([255, 255, 255])
+    colour = Colour([0, 0, 0])
+    pic = Picture(400, 400, default_picture_colour)
 
     # task №3
     delta_t = 0.01
-    star_builder(line_builder_variant_1, delta_t)
+    star_builder(line_builder_variant_1, delta_t, pic, colour)
     pic.clear()
 
     delta_t = 0.1
-    star_builder(line_builder_variant_1, delta_t)
+    star_builder(line_builder_variant_1, delta_t, pic, colour)
     pic.clear()
 
-    star_builder(line_builder_variant_2, delta_t)
+    star_builder(line_builder_variant_2, delta_t, pic, colour)
     pic.clear()
 
-    star_builder(line_builder_variant_3, delta_t)
+    star_builder(line_builder_variant_3, delta_t, pic, colour)
     pic.clear()
 
-    star_builder(line_builder_variant_4, delta_t)
+    star_builder(line_builder_variant_4, delta_t, pic, colour)
     pic.clear()
+
+
+if __name__ == '__main__':
+    default_picture_colour = Colour([255, 255, 255])
+    colour = Colour([0, 0, 0])
+    pic = Picture(1000, 1000, default_picture_colour)
+    from_file_list = create_string_matrix_from_obj_file('StormTrooper.obj')
+    for i in range(1, len(from_file_list)):
+        x1 = float(from_file_list[i][1])
+        line_builder_variant_1(float(from_file_list[i][1]), float(from_file_list[i][2]),
+                               float(from_file_list[i - 1][1]), float(from_file_list[i - 1][2]), pic, colour, 1000)
+    pic.show_picture()
