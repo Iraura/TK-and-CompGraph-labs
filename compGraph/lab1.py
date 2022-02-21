@@ -210,9 +210,9 @@ def task_5_6(multy, sum):
                                float(top_array[i - 1][2]) * multy + sum,
                                pic, colour, 1000)
     for i in polygon_map:
-        i_0 = int(i[0])
-        i_1 = int(i[1])
-        i_2 = int(i[2])
+        i_0 = int(i[0]) if int(i[0]) > 0 else len(top_array) - 1 + int(i[0])
+        i_1 = int(i[1]) if int(i[1]) > 0 else len(top_array) - 1 + int(i[1])
+        i_2 = int(i[2]) if int(i[2]) > 0 else len(top_array) - 1 + int(i[2])
         line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
                                float(top_array[i_1 - 1][1]) * multy + sum + 1,
                                float(top_array[i_1 - 1][2]) * multy + sum + 1,
