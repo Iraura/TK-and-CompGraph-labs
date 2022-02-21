@@ -229,4 +229,7 @@ def task_5_6(multy, sum):
 
 
 if __name__ == '__main__':
+    task_1()
+    task_3()
     task_5_6(100, 500)
+
