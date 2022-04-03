@@ -274,12 +274,11 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
     lambda0 = ((x1 - x2) * (y - y2) - (y1 - y2)(x - x2)) / ((x1 - x2) * (y0 - y2) - (y1 - y2)(x0 - x2))
     lambda1 = ((x2 - x0) * (y - y0) - (y2 - y0)(x - x0)) / ((x2 - x0) * (y1 - y0) - (y2 - y0)(x1 - x0))
     lambda2 = ((x0 - x1) * (y - y1) - (y0 - y1)(x - x1)) / ((x0 - x1) * (y2 - y1) - (y0 - y1)(x2 - x1))
-    return lambda0 + lambda1 + lambda2
+    return np.array([lambda0, lambda1, lambda2])
 
 
-def task_9_print_triangle(x0, y0, x1, y1, x2, y2):
+def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
     default_picture_colour = Colour([0, 0, 0])  # цвет фона
-    colour = Colour([255, 255, 255])  # цвет рисунка
     pic = Picture(1000, 1000, default_picture_colour)
 
     xmin = min(x0, x1, x2)
@@ -289,9 +288,29 @@ def task_9_print_triangle(x0, y0, x1, y1, x2, y2):
 
     if (xmin < 0): xmin = 0
     if (ymin < 0): ymin = 0
-    if (xmax < 0): xmax = 0
-    if (ymax < 0): ymax = 0
+    if (xmax > pic.h): xmax = pic.h
+    if (ymax > pic.w): ymax = pic.w
 
+    n = np.cross([x1 - x0, y1 - y0, z1 - z0],
+                 [x1 - x2, y1 - y2, z1 - z2])
+
+    l = [0, 0, 1]
+
+    cos_alpha = (n @ l) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
+    if cos_alpha > 0:
+        return
+
+    color = Colour([255 * abs(cos_alpha), 0, 0])
+
+    for x in range(round(xmin), round(xmax)):
+        for y in range(round(ymin), round(ymax)):
+            lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
+            if np.all(lambdas >= 0):
+                # TODO : Переделать
+                z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
+                # if z_val > pic.z_matrix[x][y]:
+                #     pic.z_matrix[x][y] = z_val
+                #     pic.set(x, y, color)
 
 
 if __name__ == '__main__':
