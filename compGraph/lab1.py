@@ -228,5 +228,12 @@ def task_5_6(multy, sum):
     pic.show_picture()
 
 
+def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
+    lambda0 = ((x1 - x2) * (y - y2) - (y1 - y2)(x - x2)) / ((x1 - x2) * (y0 - y2) - (y1 - y2)(x0 - x2))
+    lambda1 = ((x2 - x0) * (y - y0) - (y2 - y0)(x - x0)) / ((x2 - x0) * (y1 - y0) - (y2 - y0)(x1 - x0))
+    lambda2 = ((x0 - x1) * (y - y1) - (y0 - y1)(x - x1)) / ((x0 - x1) * (y2 - y1) - (y0 - y1)(x2 - x1))
+    return lambda0 + lambda1 + lambda2
+
+
 if __name__ == '__main__':
     task_5_6(100, 500)
