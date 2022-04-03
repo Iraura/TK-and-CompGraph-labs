@@ -36,11 +36,14 @@ class Picture:
     def clear(self):
         self.picture_array[0:self.h, 0:self.w] = self.default_colour
 
-
+# считывание вершин с obj файла
 def create_string_pixel_matrix_from_obj_file(filename):
+    # открываем obj файл
     f = open(filename)
     s = f.read().split('\n')
     source = list()
+
+    # считываем вершины, описанные структурой v x1 y1
     for i in s:
         if len(i) != 0 and i[0] == 'v' and i[1] == ' ':
             source.append(i)
@@ -49,11 +52,14 @@ def create_string_pixel_matrix_from_obj_file(filename):
         workspace.append(i.split())
     return workspace
 
-
+# считывание полигонов с obj файла
 def create_string_polygon_matrix_from_obj_file(filename):
+    # открываем obj файл
     f = open(filename)
     s = f.read().split('\n')
     source = list()
+
+    # считываем вершины полигонов, описанные структурой f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
     for i in s:
         if len(i) != 0 and i[0] == 'f' and i[1] == ' ':
             source.append(i)
@@ -62,19 +68,21 @@ def create_string_polygon_matrix_from_obj_file(filename):
         workspace.append(i.split())
 
     result = list()
+
+    # записть только первых значений из v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
     for i in workspace:
         result.append([i[1].split('/')[0], i[2].split('/')[0], i[3].split('/')[0]])
 
     return result
 
-
+# функция создания изображения для 1-го задания
 def create_coloured_square(h, w, colour_array):
     data = np.zeros((h, w, 3), dtype=np.uint8)
     data[0:512, 0:512] = colour_array
     img = Image.fromarray(data, 'RGB')
     img.show()
 
-
+# функция создания изображения с градиентом
 def create_square_with_diff_colours(w, h):
     data = np.zeros((h, w, 3), dtype=np.uint8)
     i = 0
@@ -88,7 +96,7 @@ def create_square_with_diff_colours(w, h):
     img = Image.fromarray(data, 'RGB')
     img.show()
 
-
+# функция отрисовки звезды из линий
 def star_builder(variant, delta_t, pic_star, pic_colour):
     for i in range(13):
         a = (2 * np.pi * i) / 13
@@ -115,7 +123,7 @@ def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t
         pic.set_pixel(x, y, colour)
         x += 1
 
-
+# 3-ий вариант отрисовки линий
 def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t=0.0):
     sleep = False
     x = x0
@@ -135,7 +143,7 @@ def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t
             pic.set_pixel(y, x, colour)
         x += 1
 
-
+# 4-ый вариант отрисовки линий (алгоритм Брезенхема)
 def line_builder_variant_4(x1, y1, x0, y0, pic: Picture, colour: Colour, delts_t=0.0):
     sleep = False
     if abs(x0 - x1) < abs(y0 - y1):
@@ -168,9 +176,16 @@ def line_builder_variant_4(x1, y1, x0, y0, pic: Picture, colour: Colour, delts_t
 
 
 def task_1():
+    # создание черного изображения
     create_coloured_square(512, 512, [0, 0, 0])
+
+    # создание белого изображения
     create_coloured_square(512, 512, [255, 255, 255])
+
+    # создание красного изображения
     create_coloured_square(512, 512, [255, 0, 0])
+
+    # создание градиента
     create_square_with_diff_colours(512, 512)
 
 
@@ -180,47 +195,67 @@ def task_3():
     pic = Picture(400, 400, default_picture_colour)
 
     # task №3
+    # построение звезды 1-ым способом при дельта = 0.01
+    # для последующих рисунков очищаем изображение, заполняя его дефолтным цветом
     delta_t = 0.01
     star_builder(line_builder_variant_1, delta_t, pic, colour)
     pic.clear()
 
+    # построение звезды 1-ым способом при дельта = 0.1
     delta_t = 0.1
     star_builder(line_builder_variant_1, delta_t, pic, colour)
     pic.clear()
 
+    # построение звезды 2-ым способом
     star_builder(line_builder_variant_2, delta_t, pic, colour)
     pic.clear()
 
+    # построение звезды 3-им способом
     star_builder(line_builder_variant_3, delta_t, pic, colour)
     pic.clear()
 
+    # построение звезды 4-ым способом
     star_builder(line_builder_variant_4, delta_t, pic, colour)
     pic.clear()
 
 
 def task_5_6(multy, sum):
-    default_picture_colour = Colour([0, 0, 0])
-    colour = Colour([255, 255, 255])
+    default_picture_colour = Colour([0, 0, 0])  # цвет фона
+    colour = Colour([255, 255, 255])  # цвет рисунка
     pic = Picture(1000, 1000, default_picture_colour)
+
+    # массив вершин
     top_array = create_string_pixel_matrix_from_obj_file('StormTrooper.obj')
+
+    # массив полигонов
     polygon_map = create_string_polygon_matrix_from_obj_file('StormTrooper.obj')
+
+    # отрисовка вершин изображения 1-ым способом отрисовки
     for i in range(1, len(top_array)):
         line_builder_variant_1(float(top_array[i][1]) * multy + sum, float(top_array[i][2]) * multy + sum,
                                float(top_array[i - 1][1]) * multy + sum,
                                float(top_array[i - 1][2]) * multy + sum,
                                pic, colour, 1000)
+
+    # отрисовка полигонов изображения
     for i in polygon_map:
-        i_0 = int(i[0]) if int(i[0]) > 0 else len(top_array) - 1 + int(i[0])
-        i_1 = int(i[1]) if int(i[1]) > 0 else len(top_array) - 1 + int(i[1])
-        i_2 = int(i[2]) if int(i[2]) > 0 else len(top_array) - 1 + int(i[2])
+        i_0 = int(i[0]) if int(i[0]) > 0 else len(top_array) - 1 + int(i[0])  # первая вершина полигона
+        i_1 = int(i[1]) if int(i[1]) > 0 else len(top_array) - 1 + int(i[1])  # вторая вершина полигона
+        i_2 = int(i[2]) if int(i[2]) > 0 else len(top_array) - 1 + int(i[2])  # третья вершина полигона
+
+        # первое ребро полигона (вершины 1 и 2)
         line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
                                float(top_array[i_1 - 1][1]) * multy + sum + 1,
                                float(top_array[i_1 - 1][2]) * multy + sum + 1,
                                pic, colour, 1000)
+
+        # второе ребро (вершины 1 и 3)
         line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
                                float(top_array[i_2 - 1][1]) * multy + sum + 1,
                                float(top_array[i_2 - 1][2]) * multy + sum + 1,
                                pic, colour, 1000)
+
+        # третье ребро (вершины 2 и 3)
         line_builder_variant_4(float(top_array[i_1 - 1][1]) * multy + sum, float(top_array[i_1 - 1][2]) * multy + sum,
                                float(top_array[i_2 - 1][1]) * multy + sum + 1,
                                float(top_array[i_2 - 1][2]) * multy + sum + 1,
@@ -236,4 +271,7 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
 
 
 if __name__ == '__main__':
+    task_1()
+    task_3()
     task_5_6(100, 500)
+
