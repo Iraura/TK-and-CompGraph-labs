@@ -36,6 +36,7 @@ class Picture:
     def clear(self):
         self.picture_array[0:self.h, 0:self.w] = self.default_colour
 
+
 # считывание вершин с obj файла
 def create_string_pixel_matrix_from_obj_file(filename):
     # открываем obj файл
@@ -51,6 +52,7 @@ def create_string_pixel_matrix_from_obj_file(filename):
     for i in source:
         workspace.append(i.split())
     return workspace
+
 
 # считывание полигонов с obj файла
 def create_string_polygon_matrix_from_obj_file(filename):
@@ -75,12 +77,14 @@ def create_string_polygon_matrix_from_obj_file(filename):
 
     return result
 
+
 # функция создания изображения для 1-го задания
 def create_coloured_square(h, w, colour_array):
     data = np.zeros((h, w, 3), dtype=np.uint8)
     data[0:512, 0:512] = colour_array
     img = Image.fromarray(data, 'RGB')
     img.show()
+
 
 # функция создания изображения с градиентом
 def create_square_with_diff_colours(w, h):
@@ -95,6 +99,7 @@ def create_square_with_diff_colours(w, h):
         j = j + 1
     img = Image.fromarray(data, 'RGB')
     img.show()
+
 
 # функция отрисовки звезды из линий
 def star_builder(variant, delta_t, pic_star, pic_colour):
@@ -123,6 +128,7 @@ def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t
         pic.set_pixel(x, y, colour)
         x += 1
 
+
 # 3-ий вариант отрисовки линий
 def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t=0.0):
     sleep = False
@@ -142,6 +148,7 @@ def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t
         else:
             pic.set_pixel(y, x, colour)
         x += 1
+
 
 # 4-ый вариант отрисовки линий (алгоритм Брезенхема)
 def line_builder_variant_4(x1, y1, x0, y0, pic: Picture, colour: Colour, delts_t=0.0):
@@ -270,8 +277,24 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
     return lambda0 + lambda1 + lambda2
 
 
+def task_9_print_triangle(x0, y0, x1, y1, x2, y2):
+    default_picture_colour = Colour([0, 0, 0])  # цвет фона
+    colour = Colour([255, 255, 255])  # цвет рисунка
+    pic = Picture(1000, 1000, default_picture_colour)
+
+    xmin = min(x0, x1, x2)
+    ymin = min(y0, y1, y2)
+    xmax = max(x0, x1, x2)
+    ymax = max(y0, y1, y2)
+
+    if (xmin < 0): xmin = 0
+    if (ymin < 0): ymin = 0
+    if (xmax < 0): xmax = 0
+    if (ymax < 0): ymax = 0
+
+
+
 if __name__ == '__main__':
     task_1()
     task_3()
     task_5_6(100, 500)
-
