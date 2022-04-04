@@ -272,8 +272,8 @@ def task_5_6(multy, sum):
         x0 = float(top_array[i_0 - 1][1]) * multy + sum
         y0 = float(top_array[i_0 - 1][2]) * multy + sum
         z0 = float(top_array[i_0 - 1][3]) * multy + sum
-        x1 = float(top_array[i_1 - 1][1]) * multy + sum + 1
-        y1 = float(top_array[i_1 - 1][2]) * multy + sum + 1
+        x1 = float(top_array[i_1 - 1][1]) * multy + sum
+        y1 = float(top_array[i_1 - 1][2]) * multy + sum
         z1 = float(top_array[i_1 - 1][3]) * multy + sum
         x2 = float(top_array[i_2 - 1][1]) * multy + sum
         y2 = float(top_array[i_2 - 1][2]) * multy + sum
