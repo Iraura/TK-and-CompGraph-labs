@@ -22,6 +22,7 @@ class Picture:
         self.picture_array = np.zeros((h, w, 3), dtype=np.uint8)
         self.default_colour = col.colour_array
         self.picture_array[0:h, 0:w] = col.colour_array
+        self.z_matrix = np.zeros((w, h))
 
     def create_from_array(self, array):
         self.picture_array = array
@@ -268,15 +269,15 @@ def task_5_6(multy, sum):
                                float(top_array[i_2 - 1][2]) * multy + sum + 1,
                                pic, colour, 1000)
 
-        x0 = float(top_array[i_0 - 1][1])
-        y0 = float(top_array[i_0 - 1][2])
-        z0 = float(top_array[i_0 - 1][3])
-        x1 = float(top_array[i_1 - 1][1])
-        y1 = float(top_array[i_1 - 1][2])
-        z1 = float(top_array[i_1 - 1][3])
-        x2 = float(top_array[i_2 - 1][1])
-        y2 = float(top_array[i_2 - 1][2])
-        z2 = float(top_array[i_2 - 1][3])
+        x0 = float(top_array[i_0 - 1][1]) * multy + sum
+        y0 = float(top_array[i_0 - 1][2]) * multy + sum
+        z0 = float(top_array[i_0 - 1][3]) * multy + sum
+        x1 = float(top_array[i_1 - 1][1]) * multy + sum + 1
+        y1 = float(top_array[i_1 - 1][2]) * multy + sum + 1
+        z1 = float(top_array[i_1 - 1][3]) * multy + sum
+        x2 = float(top_array[i_2 - 1][1]) * multy + sum
+        y2 = float(top_array[i_2 - 1][2]) * multy + sum
+        z2 = float(top_array[i_2 - 1][3]) * multy + sum
         task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic)
     pic.show_picture()
 
@@ -319,12 +320,12 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             if np.all(lambdas >= 0):
                 z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
-                if z_val > pic.picture_array[x][y]:
-                    pic.picture_array[x][y] = z_val
+                if z_val > pic.z_matrix[x][y]:
+                    pic.z_matrix[x][y] = z_val
                     pic.set_pixel(x, y, color)
 
 
 if __name__ == '__main__':
     # task_1()
     # task_3()
-    task_5_6(100, 500)
+    task_5_6(250, 500)
