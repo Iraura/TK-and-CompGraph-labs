@@ -267,13 +267,25 @@ def task_5_6(multy, sum):
                                float(top_array[i_2 - 1][1]) * multy + sum + 1,
                                float(top_array[i_2 - 1][2]) * multy + sum + 1,
                                pic, colour, 1000)
+
+        x0 = float(top_array[i_0 - 1][1])
+        y0 = float(top_array[i_0 - 1][2])
+        z0 = float(top_array[i_0 - 1][3])
+        x1 = float(top_array[i_1 - 1][1])
+        y1 = float(top_array[i_1 - 1][2])
+        z1 = float(top_array[i_1 - 1][3])
+        x2 = float(top_array[i_2 - 1][1])
+        y2 = float(top_array[i_2 - 1][2])
+        z2 = float(top_array[i_2 - 1][3])
+        task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic)
     pic.show_picture()
 
 
 def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
-    lambda0 = ((x1 - x2) * (y - y2) - (y1 - y2)(x - x2)) / ((x1 - x2) * (y0 - y2) - (y1 - y2)(x0 - x2))
-    lambda1 = ((x2 - x0) * (y - y0) - (y2 - y0)(x - x0)) / ((x2 - x0) * (y1 - y0) - (y2 - y0)(x1 - x0))
-    lambda2 = ((x0 - x1) * (y - y1) - (y0 - y1)(x - x1)) / ((x0 - x1) * (y2 - y1) - (y0 - y1)(x2 - x1))
+    lambda0 = ((x1 - x2) * (y - y2) - (y1 - y2) * (x - x2)) / ((x1 - x2) * (y0 - y2) - (y1 - y2) * (x0 - x2))
+    lambda1 = ((x2 - x0) * (y - y0) - (y2 - y0) * (x - x0)) / ((x2 - x0) * (y1 - y0) - (y2 - y0) * (x1 - x0))
+    lambda2 = ((x0 - x1) * (y - y1) - (y0 - y1) * (x - x1)) / ((x0 - x1) * (y2 - y1) - (y0 - y1) * (x2 - x1))
+    print(lambda0 + lambda1 + lambda2)
     return np.array([lambda0, lambda1, lambda2])
 
 
@@ -281,10 +293,10 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
     default_picture_colour = Colour([0, 0, 0])  # цвет фона
     pic = Picture(1000, 1000, default_picture_colour)
 
-    xmin = min(x0, x1, x2)
-    ymin = min(y0, y1, y2)
-    xmax = max(x0, x1, x2)
-    ymax = max(y0, y1, y2)
+    xmin = float(min(x0, x1, x2))
+    ymin = float(min(y0, y1, y2))
+    xmax = float(max(x0, x1, x2))
+    ymax = float(max(y0, y1, y2))
 
     if (xmin < 0): xmin = 0
     if (ymin < 0): ymin = 0
@@ -306,14 +318,13 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
         for y in range(round(ymin), round(ymax)):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             if np.all(lambdas >= 0):
-                # TODO : Переделать
                 z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
-                # if z_val > pic.z_matrix[x][y]:
-                #     pic.z_matrix[x][y] = z_val
-                #     pic.set(x, y, color)
+                if z_val > pic.picture_array[x][y]:
+                    pic.picture_array[x][y] = z_val
+                    pic.set_pixel(x, y, color)
 
 
 if __name__ == '__main__':
-    task_1()
-    task_3()
+    # task_1()
+    # task_3()
     task_5_6(100, 500)
