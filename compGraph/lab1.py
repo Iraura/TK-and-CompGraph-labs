@@ -238,12 +238,12 @@ def task_5_6(multy, sum):
     # массив полигонов
     polygon_map = create_string_polygon_matrix_from_obj_file('StormTrooper.obj')
 
-    # отрисовка вершин изображения 1-ым способом отрисовки
-    for i in range(1, len(top_array)):
-        line_builder_variant_1(float(top_array[i][1]) * multy + sum, float(top_array[i][2]) * multy + sum,
-                               float(top_array[i - 1][1]) * multy + sum,
-                               float(top_array[i - 1][2]) * multy + sum,
-                               pic, colour, 1000)
+    # # отрисовка вершин изображения 1-ым способом отрисовки
+    # for i in range(1, len(top_array)):
+    #     line_builder_variant_1(float(top_array[i][1]) * multy + sum, float(top_array[i][2]) * multy + sum,
+    #                            float(top_array[i - 1][1]) * multy + sum,
+    #                            float(top_array[i - 1][2]) * multy + sum,
+    #                            pic, colour, 1000)
 
     # отрисовка полигонов изображения
     for i in polygon_map:
@@ -251,23 +251,23 @@ def task_5_6(multy, sum):
         i_1 = int(i[1]) if int(i[1]) > 0 else len(top_array) - 1 + int(i[1])  # вторая вершина полигона
         i_2 = int(i[2]) if int(i[2]) > 0 else len(top_array) - 1 + int(i[2])  # третья вершина полигона
 
-        # первое ребро полигона (вершины 1 и 2)
-        line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
-                               float(top_array[i_1 - 1][1]) * multy + sum + 1,
-                               float(top_array[i_1 - 1][2]) * multy + sum + 1,
-                               pic, colour, 1000)
-
-        # второе ребро (вершины 1 и 3)
-        line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
-                               float(top_array[i_2 - 1][1]) * multy + sum + 1,
-                               float(top_array[i_2 - 1][2]) * multy + sum + 1,
-                               pic, colour, 1000)
-
-        # третье ребро (вершины 2 и 3)
-        line_builder_variant_4(float(top_array[i_1 - 1][1]) * multy + sum, float(top_array[i_1 - 1][2]) * multy + sum,
-                               float(top_array[i_2 - 1][1]) * multy + sum + 1,
-                               float(top_array[i_2 - 1][2]) * multy + sum + 1,
-                               pic, colour, 1000)
+        # # первое ребро полигона (вершины 1 и 2)
+        # line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
+        #                        float(top_array[i_1 - 1][1]) * multy + sum + 1,
+        #                        float(top_array[i_1 - 1][2]) * multy + sum + 1,
+        #                        pic, colour, 1000)
+        #
+        # # второе ребро (вершины 1 и 3)
+        # line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
+        #                        float(top_array[i_2 - 1][1]) * multy + sum + 1,
+        #                        float(top_array[i_2 - 1][2]) * multy + sum + 1,
+        #                        pic, colour, 1000)
+        #
+        # # третье ребро (вершины 2 и 3)
+        # line_builder_variant_4(float(top_array[i_1 - 1][1]) * multy + sum, float(top_array[i_1 - 1][2]) * multy + sum,
+        #                        float(top_array[i_2 - 1][1]) * multy + sum + 1,
+        #                        float(top_array[i_2 - 1][2]) * multy + sum + 1,
+        #                        pic, colour, 1000)
 
         x0 = float(top_array[i_0 - 1][1]) * multy + sum
         y0 = float(top_array[i_0 - 1][2]) * multy + sum
@@ -291,8 +291,6 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
 
 
 def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
-    default_picture_colour = Colour([0, 0, 0])  # цвет фона
-    pic = Picture(1000, 1000, default_picture_colour)
 
     xmin = float(min(x0, x1, x2))
     ymin = float(min(y0, y1, y2))
@@ -314,14 +312,13 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
         return
 
     color = Colour([255 * abs(cos_alpha), 0, 0])
-    color = Colour([253, 0, 0])
 
     for x in range(round(xmin), round(xmax)):
         for y in range(round(ymin), round(ymax)):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             if np.all(lambdas >= 0):
                 z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
-                if z_val < pic.z_matrix[x][y]:
+                if z_val > pic.z_matrix[x][y]:
                     pic.z_matrix[x][y] = z_val
                     pic.set_pixel(x, y, color)
 
