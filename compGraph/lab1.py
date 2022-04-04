@@ -272,8 +272,8 @@ def task_5_6(multy, sum):
         x0 = float(top_array[i_0 - 1][1]) * multy + sum
         y0 = float(top_array[i_0 - 1][2]) * multy + sum
         z0 = float(top_array[i_0 - 1][3]) * multy + sum
-        x1 = float(top_array[i_1 - 1][1]) * multy + sum
-        y1 = float(top_array[i_1 - 1][2]) * multy + sum
+        x1 = float(top_array[i_1 - 1][1]) * multy + sum + 1
+        y1 = float(top_array[i_1 - 1][2]) * multy + sum + 1
         z1 = float(top_array[i_1 - 1][3]) * multy + sum
         x2 = float(top_array[i_2 - 1][1]) * multy + sum
         y2 = float(top_array[i_2 - 1][2]) * multy + sum
@@ -314,13 +314,14 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
         return
 
     color = Colour([255 * abs(cos_alpha), 0, 0])
+    color = Colour([253, 0, 0])
 
     for x in range(round(xmin), round(xmax)):
         for y in range(round(ymin), round(ymax)):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             if np.all(lambdas >= 0):
                 z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
-                if z_val > pic.z_matrix[x][y]:
+                if z_val < pic.z_matrix[x][y]:
                     pic.z_matrix[x][y] = z_val
                     pic.set_pixel(x, y, color)
 
