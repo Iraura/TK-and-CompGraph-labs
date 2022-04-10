@@ -353,6 +353,37 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
                     continue
 
 
+def task_17(points):
+    alpha = 0 * 180 / np.pi
+    betta = 0 * 180 / np.pi
+    gamma = 0 * 180 / np.pi
+
+    cos_alpha = np.cos(alpha)
+    cos_betta = np.cos(betta)
+    cos_gamma = np.cos(gamma)
+    sin_alpha = np.sin(alpha)
+    sin_betta = np.sin(betta)
+    sin_gamma = np.sin(gamma)
+
+    rotate_x_matrix = np.array([[1, 0, 0],
+                                [0, cos_alpha, sin_alpha],
+                                [0, -sin_alpha, cos_alpha]])
+
+    rotate_y_matrix = np.array([[cos_betta, 0, sin_betta],
+                                [0, 1, 0],
+                                [-sin_betta, 0, cos_betta]])
+
+    rotate_z_matrix = np.array([[cos_gamma, sin_gamma, 0],
+                                [-sin_gamma, cos_gamma, 0],
+                                [0, 0, 1]])
+
+    first_matmul_xy = np.matmul(rotate_x_matrix, rotate_y_matrix)
+    R_matrix = np.matmul(first_matmul_xy, rotate_z_matrix)
+
+    rotated_points = np.matmul(R_matrix, points)
+    return rotated_points.T.tolist()
+
+
 if __name__ == '__main__':
     # task_1()
     # task_3()
