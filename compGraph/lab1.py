@@ -269,9 +269,9 @@ def task_5_6(multy, sum):
         #                        float(top_array[i_2 - 1][2]) * multy + sum + 1,
         #                        pic, colour, 1000)
 
-        x0_y0_z0 = multilizate_coords(top_array[i_0 - 1][1:], multy, sum, pic)
-        x1_y1_z1 = multilizate_coords(top_array[i_1 - 1][1:], multy, sum, pic)
-        x2_y2_z2 = multilizate_coords(top_array[i_2 - 1][1:], multy, sum, pic)
+        x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1][1:], multy, sum, pic))
+        x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1][1:], multy, sum, pic))
+        x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1][1:], multy, sum, pic))
 
         x0 = x0_y0_z0[0]
         y0 = x0_y0_z0[1]
@@ -297,7 +297,7 @@ def task_5_6(multy, sum):
     pic.show_picture()
 
 
-def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.005, ty=-0.045, tz=0.5):
+def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.02, ty=-0.025, tz=0.5):
     u0 = pic.w // 2
     v0 = pic.h // 2
 
@@ -353,11 +353,10 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
                     continue
 
 
-def task_17(top_array):
-    points = [float(item) for item in top_array]
+def task_17(points):
 
     alpha = 0 * 180 / np.pi
-    betta = 0 * 180 / np.pi
+    betta = 0.1 * 180 / np.pi
     gamma = 0 * 180 / np.pi
 
     cos_alpha = np.cos(alpha)
@@ -389,6 +388,6 @@ def task_17(top_array):
 if __name__ == '__main__':
     # task_1()
     # task_3()
-     task_5_6(7500, 7500) #trooper
+     task_5_6(8000, 12000) #trooper
     # task_5_6(5, 500) # fox
     # task_5_6(100, 100)
