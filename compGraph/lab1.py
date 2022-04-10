@@ -345,14 +345,17 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             if np.all(lambdas >= 0):
                 z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
-                if z_val > pic.z_matrix[x][y]:
-                    pic.z_matrix[x][y] = z_val
-                    pic.set_pixel(x, y, color)
+                if x < pic.h and x > 0 and y < pic.w and y > 0:
+                    if z_val > pic.z_matrix[x][y]:
+                        pic.z_matrix[x][y] = z_val
+                        pic.set_pixel(x, y, color)
+                else:
+                    continue
 
 
 if __name__ == '__main__':
     # task_1()
     # task_3()
-    # task_5_6(250, 500) #trooper
+     task_5_6(10000, 10000) #trooper
     # task_5_6(5, 500) # fox
-    task_5_6(0.5, 0.5)
+    # task_5_6(100, 100)
