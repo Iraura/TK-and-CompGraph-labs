@@ -297,7 +297,7 @@ def task_5_6(multy, sum):
     pic.show_picture()
 
 
-def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.005, ty=-0.045, tz=15.0):
+def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.005, ty=-0.045, tz=0.5):
     u0 = pic.w // 2
     v0 = pic.h // 2
 
@@ -353,7 +353,9 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
                     continue
 
 
-def task_17(points):
+def task_17(top_array):
+    points = [float(item) for item in top_array]
+
     alpha = 0 * 180 / np.pi
     betta = 0 * 180 / np.pi
     gamma = 0 * 180 / np.pi
@@ -387,6 +389,6 @@ def task_17(points):
 if __name__ == '__main__':
     # task_1()
     # task_3()
-     task_5_6(10000, 10000) #trooper
+     task_5_6(7500, 7500) #trooper
     # task_5_6(5, 500) # fox
     # task_5_6(100, 100)
