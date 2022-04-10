@@ -22,13 +22,14 @@ class Picture:
         self.picture_array = np.zeros((h, w, 3), dtype=np.uint8)
         self.default_colour = col.colour_array
         self.picture_array[0:h, 0:w] = col.colour_array
-        self.z_matrix = np.zeros((w, h))
+        self.z_matrix = np.zeros((h, w))
 
     def create_from_array(self, array):
         self.picture_array = array
 
     def set_pixel(self, x, y, color: Colour):
-        self.picture_array[int(x), int(y)] = color.colour_array
+        if x < self.w and x > 0 and y < self.h and y > 0:
+            self.picture_array[int(y), int(x)] = color.colour_array
 
     def show_picture(self):
         img = Image.fromarray(self.picture_array, 'RGB')
@@ -41,8 +42,8 @@ class Picture:
 # считывание вершин с obj файла
 def create_string_pixel_matrix_from_obj_file(filename):
     # открываем obj файл
-    f = open(filename)
-    s = f.read().split('\n')
+    with open(filename, 'r') as f:
+        s = f.read().split('\n')
     source = list()
 
     # считываем вершины, описанные структурой v x1 y1
@@ -58,8 +59,8 @@ def create_string_pixel_matrix_from_obj_file(filename):
 # считывание полигонов с obj файла
 def create_string_polygon_matrix_from_obj_file(filename):
     # открываем obj файл
-    f = open(filename)
-    s = f.read().split('\n')
+    with open(filename, 'r') as f:
+        s = f.read().split('\n')
     source = list()
 
     # считываем вершины полигонов, описанные структурой f v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
@@ -229,14 +230,13 @@ def task_3():
 
 def task_5_6(multy, sum):
     default_picture_colour = Colour([0, 0, 0])  # цвет фона
-    colour = Colour([255, 255, 255])  # цвет рисунка
     pic = Picture(1000, 1000, default_picture_colour)
 
     # массив вершин
-    top_array = create_string_pixel_matrix_from_obj_file('StormTrooper.obj')
+    top_array = create_string_pixel_matrix_from_obj_file('rabbit.obj')
 
     # массив полигонов
-    polygon_map = create_string_polygon_matrix_from_obj_file('StormTrooper.obj')
+    polygon_map = create_string_polygon_matrix_from_obj_file('rabbit.obj')
 
     # # отрисовка вершин изображения 1-ым способом отрисовки
     # for i in range(1, len(top_array)):
@@ -269,38 +269,65 @@ def task_5_6(multy, sum):
         #                        float(top_array[i_2 - 1][2]) * multy + sum + 1,
         #                        pic, colour, 1000)
 
-        x0 = float(top_array[i_0 - 1][1]) * multy + sum
-        y0 = float(top_array[i_0 - 1][2]) * multy + sum
-        z0 = float(top_array[i_0 - 1][3]) * multy + sum
-        x1 = float(top_array[i_1 - 1][1]) * multy + sum + 1
-        y1 = float(top_array[i_1 - 1][2]) * multy + sum + 1
-        z1 = float(top_array[i_1 - 1][3]) * multy + sum
-        x2 = float(top_array[i_2 - 1][1]) * multy + sum
-        y2 = float(top_array[i_2 - 1][2]) * multy + sum
-        z2 = float(top_array[i_2 - 1][3]) * multy + sum
+        x0_y0_z0 = multilizate_coords(top_array[i_0 - 1][1:], multy, sum, pic)
+        x1_y1_z1 = multilizate_coords(top_array[i_1 - 1][1:], multy, sum, pic)
+        x2_y2_z2 = multilizate_coords(top_array[i_2 - 1][1:], multy, sum, pic)
+
+        x0 = x0_y0_z0[0]
+        y0 = x0_y0_z0[1]
+        z0 = x0_y0_z0[2]
+        x1 = x1_y1_z1[0]
+        y1 = x1_y1_z1[1]
+        z1 = x1_y1_z1[2]
+        x2 = x2_y2_z2[0]
+        y2 = x2_y2_z2[1]
+        z2 = x2_y2_z2[2]
+
+        # x0 = float(top_array[i_0 - 1][1]) * multy + sum
+        # y0 = float(top_array[i_0 - 1][2]) * multy + sum
+        # z0 = float(top_array[i_0 - 1][3]) * multy + sum
+        # x1 = float(top_array[i_1 - 1][1]) * multy + sum + 1
+        # y1 = float(top_array[i_1 - 1][2]) * multy + sum + 1
+        # z1 = float(top_array[i_1 - 1][3]) * multy + sum
+        # x2 = float(top_array[i_2 - 1][1]) * multy + sum
+        # y2 = float(top_array[i_2 - 1][2]) * multy + sum
+        # z2 = float(top_array[i_2 - 1][3]) * multy + sum
         task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic)
+        # task_9_print_triangle(y0, x0, z0, y1, x1, z1, y2, x2, z2, pic)
     pic.show_picture()
+
+
+def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.005, ty=-0.045, tz=15.0):
+    u0 = pic.w // 2
+    v0 = pic.h // 2
+
+    result = [float(item) for item in top_array]
+    x_shift = result[0] + tx
+    y_shift = result[1] + ty
+    z_shift = result[2] + tz
+    result[0] = x_shift * ax + u0 * z_shift
+    result[1] = y_shift * ay + z_shift * v0
+    result[2] = z_shift
+    return result
 
 
 def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
     lambda0 = ((x1 - x2) * (y - y2) - (y1 - y2) * (x - x2)) / ((x1 - x2) * (y0 - y2) - (y1 - y2) * (x0 - x2))
     lambda1 = ((x2 - x0) * (y - y0) - (y2 - y0) * (x - x0)) / ((x2 - x0) * (y1 - y0) - (y2 - y0) * (x1 - x0))
     lambda2 = ((x0 - x1) * (y - y1) - (y0 - y1) * (x - x1)) / ((x0 - x1) * (y2 - y1) - (y0 - y1) * (x2 - x1))
-    print(lambda0 + lambda1 + lambda2)
     return np.array([lambda0, lambda1, lambda2])
 
 
 def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
-
     xmin = float(min(x0, x1, x2))
     ymin = float(min(y0, y1, y2))
     xmax = float(max(x0, x1, x2))
     ymax = float(max(y0, y1, y2))
 
-    if (xmin < 0): xmin = 0
-    if (ymin < 0): ymin = 0
-    if (xmax > pic.h): xmax = pic.h
-    if (ymax > pic.w): ymax = pic.w
+    # if (xmin < 0): xmin = 0
+    # if (ymin < 0): ymin = 0
+    # if (xmax > pic.h): xmax = pic.h
+    # if (ymax > pic.w): ymax = pic.w
 
     n = np.cross([x1 - x0, y1 - y0, z1 - z0],
                  [x1 - x2, y1 - y2, z1 - z2])
@@ -326,4 +353,6 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
 if __name__ == '__main__':
     # task_1()
     # task_3()
-    task_5_6(250, 500)
+    # task_5_6(250, 500) #trooper
+    # task_5_6(5, 500) # fox
+    task_5_6(0.5, 0.5)
