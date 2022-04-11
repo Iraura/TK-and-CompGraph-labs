@@ -15,12 +15,13 @@ class Picture:
     w = 512
     picture_array = np.zeros((h, w, 3), dtype=np.uint8)
     default_colour = Colour([0, 0, 0])
+    picture_colour = Colour([0, 0, 0])
 
     def __init__(self, h, w, col: Colour):
         self.h = h
         self.w = w
         self.picture_array = np.zeros((h, w, 3), dtype=np.uint8)
-        self.default_colour = col
+        self.picture_colour = col
         self.z_matrix = np.zeros((h, w))
 
     def create_from_array(self, array):
@@ -35,10 +36,10 @@ class Picture:
         img.show()
 
     def clear(self):
-        self.picture_array[0:self.h, 0:self.w] = self.default_colour
+        self.picture_array[0:self.h, 0:self.w] = self.default_colour.colour_array
 
     # 4-ый вариант отрисовки линий (алгоритм Брезенхема)
-    def line_v_4(self, x1, y1, x0, y0, colour: Colour, delts_t=0.0):
+    def line_v_4(self, x1, y1, x0, y0, delts_t=0.0):
         sleep = False
         if abs(x0 - x1) < abs(y0 - y1):
             x0, y0 = y0, x0
@@ -57,9 +58,9 @@ class Picture:
 
         for x in range(int(x0), int(x1) + 1):
             if sleep:
-                self.set_pixel(y, x, colour)
+                self.set_pixel(y, x, self.picture_colour)
             else:
-                self.set_pixel(x, y, colour)
+                self.set_pixel(x, y, self.picture_colour)
             error += d_error
             if error > 0.5:
                 if y1 > y0:
@@ -69,7 +70,7 @@ class Picture:
                 error -= 1.
 
     # 3-ий вариант отрисовки линий
-    def line_v_3(self, x1, y1, x0, y0, colour: Colour, delta_t=0.0):
+    def line_v_3(self, x1, y1, x0, y0, delta_t=0.0):
         sleep = False
         x = x0
         if abs(x0 - x1) < abs(y0 - y1):
@@ -83,18 +84,18 @@ class Picture:
             t = (x - x0) / (x1 - x0)
             y = y0 * (1.0 - t) + y1 * t
             if sleep:
-                self.set_pixel(x, y, colour)
+                self.set_pixel(x, y, self.picture_colour)
             else:
-                self.set_pixel(y, x, colour)
+                self.set_pixel(y, x, self.picture_colour)
             x += 1
 
     # if x1 = 0 then we will not get any image because of (x1 - x0) < 0
-    def line_v_2(self, x1, y1, x0, y0, colour: Colour, delta_t):
+    def line_v_2(self, x1, y1, x0, y0, delta_t=0.0):
         x = x0
         while x <= x1:
             t = (x - x0) / (x1 - x0)
             y = y0 * (1.0 - t) + y1 * t
-            self.set_pixel(x, y, colour)
+            self.set_pixel(x, y, self.picture_colour)
             x += 1
 
     def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3):
@@ -143,7 +144,7 @@ class Picture:
         while t < 1.0:
             x = x0 * (1.0 - t) + x1 * t
             y = y0 * (1.0 - t) + y1 * t
-            self.set_pixel(x, y, self.default_colour)
+            self.set_pixel(x, y, self.picture_colour)
             t += delta_t
 
     # функция отрисовки звезды из линий
@@ -152,6 +153,29 @@ class Picture:
             a = (2 * np.pi * i) / 13
             variant(100 + 95 * np.cos(a), 100 + 95 * np.sin(a), 100, 100, delta_t)
         self.show_picture()
+
+    def print_points(self, top_array, multy, sum):
+        # # отрисовка вершин изображения 1-ым способом отрисовки
+        for i in range(1, len(top_array)):
+            self.line_v_1(top_array[i][0] * multy + sum, top_array[i][1] * multy + sum,
+                          top_array[i - 1][0] * multy + sum,
+                          top_array[i - 1][1] * multy + sum, 1000)
+
+    def print_sides(self, top_array, multy, sum, i_0, i_1, i_2):
+        # # первое ребро полигона (вершины 1 и 2)
+        self.line_v_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
+                      top_array[i_1 - 1][0] * multy + sum + 1,
+                      top_array[i_1 - 1][1] * multy + sum + 1, 1000)
+
+        # # второе ребро (вершины 1 и 3)
+        self.line_v_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
+                      top_array[i_2 - 1][0] * multy + sum + 1,
+                      top_array[i_2 - 1][1] * multy + sum + 1, 1000)
+
+        # третье ребро (вершины 2 и 3)
+        self.line_v_4(top_array[i_1 - 1][0] * multy + sum, top_array[i_1 - 1][1] * multy + sum,
+                      top_array[i_2 - 1][0] * multy + sum + 1,
+                      top_array[i_2 - 1][1] * multy + sum + 1, 1000)
 
 
 # считывание вершин с obj файла
@@ -261,13 +285,13 @@ def task_3():
     pic.star_builder(pic.line_v_3, delta_t)
     pic.clear()
 
-    # построение звезды 4-ым способом
+    # # построение звезды 4-ым способом
     pic.star_builder(pic.line_v_4, delta_t)
     pic.clear()
 
 
 def task_5_6(multy, sum):
-    default_picture_colour = Colour([0, 0, 0])  # цвет фона
+    default_picture_colour = Colour([123, 0, 0])  # цвет фона
     pic = Picture(1000, 1000, default_picture_colour)
 
     # массив вершин
@@ -276,13 +300,7 @@ def task_5_6(multy, sum):
     # массив полигонов
     polygon_map = read_polygon_matrix_from_file('rabbit.obj')
 
-    # # отрисовка вершин изображения 1-ым способом отрисовки
-    # for i in range(1, len(top_array)):
-    #     line_v_1(top_array[i][0] * multy + sum, top_array[i][1] * multy + sum,
-    #                            top_array[i - 1][0] * multy + sum,
-    #                            top_array[i - 1][1] * multy + sum,
-    #                            pic, colour, 1000)
-
+    # pic.print_points(top_array, multy, sum)
     # отрисовка полигонов изображения
 
     for i in polygon_map:
@@ -290,23 +308,7 @@ def task_5_6(multy, sum):
         i_1 = i[1] if i[1] > 0 else len(top_array) - 1 + i[1]  # вторая вершина полигона
         i_2 = i[2] if i[2] > 0 else len(top_array) - 1 + i[2]  # третья вершина полигона
 
-        # # первое ребро полигона (вершины 1 и 2)
-        # line_v_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
-        #                        top_array[i_1 - 1][0] * multy + sum + 1,
-        #                        top_array[i_1 - 1][1] * multy + sum + 1,
-        #                        pic, colour, 1000)
-        #
-        # # второе ребро (вершины 1 и 3)
-        # line_v_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
-        #                        top_array[i_2 - 1][0] * multy + sum + 1,
-        #                        top_array[i_2 - 1][1] * multy + sum + 1,
-        #                        pic, colour, 1000)
-        #
-        # # третье ребро (вершины 2 и 3)
-        # line_v_4(top_array[i_1 - 1][0] * multy + sum, top_array[i_1 - 1][1] * multy + sum,
-        #                        top_array[i_2 - 1][0] * multy + sum + 1,
-        #                        top_array[i_2 - 1][1] * multy + sum + 1,
-        #                        pic, colour, 1000)
+        # pic.print_sides(top_array, multy, sum, i_0, i_1, i_2)
 
         x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1], multy, sum, pic))
         x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1], multy, sum, pic))
@@ -334,7 +336,6 @@ def task_5_6(multy, sum):
 
         pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, i_0, i_1, i_2)
 
-        # task_9_print_triangle(y0, x0, z0, y1, x1, z1, y2, x2, z2, pic)
     pic.show_picture()
 
 
@@ -361,7 +362,7 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
 
 def task_17(points):
     alpha = 0 * 180 / np.pi
-    betta = 0.1 * 180 / np.pi
+    betta = 0 * 180 / np.pi
     gamma = 0 * 180 / np.pi
 
     cos_alpha = np.cos(alpha)
@@ -403,8 +404,8 @@ def get_l(n, l_vector):
 
 
 if __name__ == '__main__':
- #   task_1()
-    task_3()
-# task_5_6(7500, 7500)  # troop   er
+    #   task_1()
+    # task_3()
+    task_5_6(7500, 7500)  # troop   er
 # task_5_6(5, 500) # fox
 # task_5_6(100, 100)
