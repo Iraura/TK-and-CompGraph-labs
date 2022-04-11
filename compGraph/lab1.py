@@ -298,8 +298,7 @@ def task_5_6(multy, sum):
         # y2 = top_array[i_2 - 1][1] * multy + sum
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
-        task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic, normals, i_0-1, i_1-1, i_2-1)
-
+        task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic, normals, i_0, i_1, i_2)
 
         # task_9_print_triangle(y0, x0, z0, y1, x1, z1, y2, x2, z2, pic)
     pic.show_picture()
@@ -326,7 +325,7 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
     return np.array([lambda0, lambda1, lambda2])
 
 
-def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, normals, index1,index2,index3):
+def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, normals, index1, index2, index3):
     xmin = float(min(x0, x1, x2))
     ymin = float(min(y0, y1, y2))
     xmax = float(max(x0, x1, x2))
@@ -341,7 +340,8 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, norm
                  [x1 - x2, y1 - y2, z1 - z2])
 
     v = [0, 0, 1]
-
+    if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
+        return
     l0 = get_l(normals[index1], v)
     l1 = get_l(normals[index2], v)
     l2 = get_l(normals[index3], v)
