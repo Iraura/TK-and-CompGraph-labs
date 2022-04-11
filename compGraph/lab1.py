@@ -40,7 +40,7 @@ class Picture:
 
 
 # считывание вершин с obj файла
-def create_string_pixel_matrix_from_obj_file(filename, letter):
+def read_pixel_matrix_from_file(filename, letter):
     # открываем obj файл
     with open(filename, 'r') as f:
         s = f.read().split('\n')
@@ -60,7 +60,7 @@ def create_string_pixel_matrix_from_obj_file(filename, letter):
 
 
 # считывание полигонов с obj файла
-def create_string_polygon_matrix_from_obj_file(filename):
+def read_polygon_matrix_from_file(filename):
     # открываем obj файл
     with open(filename, 'r') as f:
         s = f.read().split('\n')
@@ -78,7 +78,7 @@ def create_string_polygon_matrix_from_obj_file(filename):
 
     # записть только первых значений из v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
     for i in workspace:
-        result.append([i[1].split('/')[0], i[2].split('/')[0], i[3].split('/')[0]])
+        result.append([int(i[1].split('/')[0]), int(i[2].split('/')[0]), int(i[3].split('/')[0])])
 
     return result
 
@@ -115,7 +115,7 @@ def star_builder(variant, delta_t, pic_star, pic_colour):
 
 
 # exception if we go from last index to center
-def line_builder_variant_1(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t=0.1):
+def line_v_1(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t=0.1):
     t = 0.0
     while t < 1.0:
         x = x0 * (1.0 - t) + x1 * t
@@ -125,7 +125,7 @@ def line_builder_variant_1(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t
 
 
 # if x1 = 0 then we will not get any image because of (x1 - x0) < 0
-def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t):
+def line_v_2(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t):
     x = x0
     while x <= x1:
         t = (x - x0) / (x1 - x0)
@@ -135,7 +135,7 @@ def line_builder_variant_2(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t
 
 
 # 3-ий вариант отрисовки линий
-def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t=0.0):
+def line_v_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t=0.0):
     sleep = False
     x = x0
     if abs(x0 - x1) < abs(y0 - y1):
@@ -156,7 +156,7 @@ def line_builder_variant_3(x1, y1, x0, y0, pic: Picture, colour: Colour, delta_t
 
 
 # 4-ый вариант отрисовки линий (алгоритм Брезенхема)
-def line_builder_variant_4(x1, y1, x0, y0, pic: Picture, colour: Colour, delts_t=0.0):
+def line_v_4(x1, y1, x0, y0, pic: Picture, colour: Colour, delts_t=0.0):
     sleep = False
     if abs(x0 - x1) < abs(y0 - y1):
         x0, y0 = y0, x0
@@ -210,24 +210,24 @@ def task_3():
     # построение звезды 1-ым способом при дельта = 0.01
     # для последующих рисунков очищаем изображение, заполняя его дефолтным цветом
     delta_t = 0.01
-    star_builder(line_builder_variant_1, delta_t, pic, colour)
+    star_builder(line_v_1, delta_t, pic, colour)
     pic.clear()
 
     # построение звезды 1-ым способом при дельта = 0.1
     delta_t = 0.1
-    star_builder(line_builder_variant_1, delta_t, pic, colour)
+    star_builder(line_v_1, delta_t, pic, colour)
     pic.clear()
 
     # построение звезды 2-ым способом
-    star_builder(line_builder_variant_2, delta_t, pic, colour)
+    star_builder(line_v_2, delta_t, pic, colour)
     pic.clear()
 
     # построение звезды 3-им способом
-    star_builder(line_builder_variant_3, delta_t, pic, colour)
+    star_builder(line_v_3, delta_t, pic, colour)
     pic.clear()
 
     # построение звезды 4-ым способом
-    star_builder(line_builder_variant_4, delta_t, pic, colour)
+    star_builder(line_v_4, delta_t, pic, colour)
     pic.clear()
 
 
@@ -236,38 +236,38 @@ def task_5_6(multy, sum):
     pic = Picture(1000, 1000, default_picture_colour)
 
     # массив вершин
-    top_array = create_string_pixel_matrix_from_obj_file('rabbit.obj', "v")
+    top_array = read_pixel_matrix_from_file('rabbit.obj', "v")
 
     # массив полигонов
-    polygon_map = create_string_polygon_matrix_from_obj_file('rabbit.obj')
+    polygon_map = read_polygon_matrix_from_file('rabbit.obj')
 
     # # отрисовка вершин изображения 1-ым способом отрисовки
     # for i in range(1, len(top_array)):
-    #     line_builder_variant_1(top_array[i][0] * multy + sum, top_array[i][1] * multy + sum,
+    #     line_v_1(top_array[i][0] * multy + sum, top_array[i][1] * multy + sum,
     #                            top_array[i - 1][0] * multy + sum,
     #                            top_array[i - 1][1] * multy + sum,
     #                            pic, colour, 1000)
 
     # отрисовка полигонов изображения
     for i in polygon_map:
-        i_0 = int(i[0]) if int(i[0]) > 0 else len(top_array) - 1 + int(i[0])  # первая вершина полигона
-        i_1 = int(i[1]) if int(i[1]) > 0 else len(top_array) - 1 + int(i[1])  # вторая вершина полигона
-        i_2 = int(i[2]) if int(i[2]) > 0 else len(top_array) - 1 + int(i[2])  # третья вершина полигона
+        i_0 = i[0] if i[0] > 0 else len(top_array) - 1 + i[0]  # первая вершина полигона
+        i_1 = i[1] if i[1] > 0 else len(top_array) - 1 + i[1]  # вторая вершина полигона
+        i_2 = i[2] if i[2] > 0 else len(top_array) - 1 + i[2]  # третья вершина полигона
 
         # # первое ребро полигона (вершины 1 и 2)
-        # line_builder_variant_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
+        # line_v_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
         #                        top_array[i_1 - 1][0] * multy + sum + 1,
         #                        top_array[i_1 - 1][1] * multy + sum + 1,
         #                        pic, colour, 1000)
         #
         # # второе ребро (вершины 1 и 3)
-        # line_builder_variant_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
+        # line_v_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
         #                        top_array[i_2 - 1][0] * multy + sum + 1,
         #                        top_array[i_2 - 1][1] * multy + sum + 1,
         #                        pic, colour, 1000)
         #
         # # третье ребро (вершины 2 и 3)
-        # line_builder_variant_4(top_array[i_1 - 1][0] * multy + sum, top_array[i_1 - 1][1] * multy + sum,
+        # line_v_4(top_array[i_1 - 1][0] * multy + sum, top_array[i_1 - 1][1] * multy + sum,
         #                        top_array[i_2 - 1][0] * multy + sum + 1,
         #                        top_array[i_2 - 1][1] * multy + sum + 1,
         #                        pic, colour, 1000)
@@ -336,7 +336,7 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
                  [x1 - x2, y1 - y2, z1 - z2])
 
     v = [0, 0, 1]
-    normals = create_string_pixel_matrix_from_obj_file("rabbit.obj", "vn")
+    normals = read_pixel_matrix_from_file("rabbit.obj", "vn")
     l0 = get_l(normals[0], v)
     l1 = get_l(normals[1], v)
     l2 = get_l(normals[2], v)
@@ -397,5 +397,5 @@ if __name__ == '__main__':
     # task_1()
     # task_3()
     task_5_6(8000, 12000)  # trooper
-# task_5_6(5, 500) # fox
-# task_5_6(100, 100)
+    # task_5_6(5, 500) # fox
+    # task_5_6(100, 100)
