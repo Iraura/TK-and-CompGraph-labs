@@ -40,7 +40,7 @@ class Picture:
 
 
 # считывание вершин с obj файла
-def create_string_pixel_matrix_from_obj_file(filename):
+def create_string_pixel_matrix_from_obj_file(filename, letter):
     # открываем obj файл
     with open(filename, 'r') as f:
         s = f.read().split('\n')
@@ -48,7 +48,7 @@ def create_string_pixel_matrix_from_obj_file(filename):
 
     # считываем вершины, описанные структурой v x1 y1
     for i in s:
-        if len(i) != 0 and i[0] == 'v' and i[1] == ' ':
+        if len(i) != 0 and i[0] == letter and i[1] == ' ':
             source.append(i)
     workspace = list()
     for i in source:
@@ -236,7 +236,7 @@ def task_5_6(multy, sum):
     pic = Picture(1000, 1000, default_picture_colour)
 
     # массив вершин
-    top_array = create_string_pixel_matrix_from_obj_file('rabbit.obj')
+    top_array = create_string_pixel_matrix_from_obj_file('rabbit.obj', "v")
 
     # массив полигонов
     polygon_map = create_string_polygon_matrix_from_obj_file('rabbit.obj')
@@ -335,17 +335,23 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
     n = np.cross([x1 - x0, y1 - y0, z1 - z0],
                  [x1 - x2, y1 - y2, z1 - z2])
 
-    l = [0, 0, 1]
+    v = [0, 0, 1]
+    normals = create_string_pixel_matrix_from_obj_file("rabbit.obj", "vn")
+    l0 = get_l(normals[0], v)
+    l1 = get_l(normals[1], v)
+    l2 = get_l(normals[2], v)
 
-    cos_alpha = (n @ l) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
+    cos_alpha = (n @ v) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
     if cos_alpha > 0:
         return
 
-    color = Colour([255 * abs(cos_alpha), 0, 0])
+    # color = Colour([255 * abs(cos_alpha), 0, 0])
 
     for x in range(round(xmin), round(xmax)):
         for y in range(round(ymin), round(ymax)):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
+            brightness_value = 255 * (lambdas[0] * l0 + lambdas[1] * l1 + lambdas[2] * l2)
+            color = Colour([brightness_value, 0, 0])
             if np.all(lambdas >= 0):
                 z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
                 if pic.h > x > 0 and pic.w > y > 0:
@@ -357,7 +363,6 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
 
 
 def task_17(points):
-
     alpha = 0 * 180 / np.pi
     betta = 0.1 * 180 / np.pi
     gamma = 0 * 180 / np.pi
@@ -391,6 +396,6 @@ def task_17(points):
 if __name__ == '__main__':
     # task_1()
     # task_3()
-     task_5_6(8000, 12000) #trooper
-    # task_5_6(5, 500) # fox
-    # task_5_6(100, 100)
+    task_5_6(8000, 12000)  # trooper
+# task_5_6(5, 500) # fox
+# task_5_6(100, 100)
