@@ -28,7 +28,7 @@ class Picture:
         self.picture_array = array
 
     def set_pixel(self, x, y, color: Colour):
-        if x < self.w and x > 0 and y < self.h and y > 0:
+        if self.w > x > 0 and self.h > y > 0:
             self.picture_array[int(y), int(x)] = color.colour_array
 
     def show_picture(self):
@@ -52,7 +52,10 @@ def create_string_pixel_matrix_from_obj_file(filename):
             source.append(i)
     workspace = list()
     for i in source:
-        workspace.append(i.split())
+        e = i.split()
+        del e[0]
+        result = [float(item) for item in e]
+        workspace.append(result)
     return workspace
 
 
@@ -240,9 +243,9 @@ def task_5_6(multy, sum):
 
     # # отрисовка вершин изображения 1-ым способом отрисовки
     # for i in range(1, len(top_array)):
-    #     line_builder_variant_1(float(top_array[i][1]) * multy + sum, float(top_array[i][2]) * multy + sum,
-    #                            float(top_array[i - 1][1]) * multy + sum,
-    #                            float(top_array[i - 1][2]) * multy + sum,
+    #     line_builder_variant_1(top_array[i][0] * multy + sum, top_array[i][1] * multy + sum,
+    #                            top_array[i - 1][0] * multy + sum,
+    #                            top_array[i - 1][1] * multy + sum,
     #                            pic, colour, 1000)
 
     # отрисовка полигонов изображения
@@ -252,26 +255,26 @@ def task_5_6(multy, sum):
         i_2 = int(i[2]) if int(i[2]) > 0 else len(top_array) - 1 + int(i[2])  # третья вершина полигона
 
         # # первое ребро полигона (вершины 1 и 2)
-        # line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
-        #                        float(top_array[i_1 - 1][1]) * multy + sum + 1,
-        #                        float(top_array[i_1 - 1][2]) * multy + sum + 1,
+        # line_builder_variant_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
+        #                        top_array[i_1 - 1][0] * multy + sum + 1,
+        #                        top_array[i_1 - 1][1] * multy + sum + 1,
         #                        pic, colour, 1000)
         #
         # # второе ребро (вершины 1 и 3)
-        # line_builder_variant_4(float(top_array[i_0 - 1][1]) * multy + sum, float(top_array[i_0 - 1][2]) * multy + sum,
-        #                        float(top_array[i_2 - 1][1]) * multy + sum + 1,
-        #                        float(top_array[i_2 - 1][2]) * multy + sum + 1,
+        # line_builder_variant_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
+        #                        top_array[i_2 - 1][0] * multy + sum + 1,
+        #                        top_array[i_2 - 1][1] * multy + sum + 1,
         #                        pic, colour, 1000)
         #
         # # третье ребро (вершины 2 и 3)
-        # line_builder_variant_4(float(top_array[i_1 - 1][1]) * multy + sum, float(top_array[i_1 - 1][2]) * multy + sum,
-        #                        float(top_array[i_2 - 1][1]) * multy + sum + 1,
-        #                        float(top_array[i_2 - 1][2]) * multy + sum + 1,
+        # line_builder_variant_4(top_array[i_1 - 1][0] * multy + sum, top_array[i_1 - 1][1] * multy + sum,
+        #                        top_array[i_2 - 1][0] * multy + sum + 1,
+        #                        top_array[i_2 - 1][1] * multy + sum + 1,
         #                        pic, colour, 1000)
 
-        x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1][1:], multy, sum, pic))
-        x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1][1:], multy, sum, pic))
-        x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1][1:], multy, sum, pic))
+        x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1], multy, sum, pic))
+        x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1], multy, sum, pic))
+        x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1], multy, sum, pic))
 
         x0 = x0_y0_z0[0]
         y0 = x0_y0_z0[1]
@@ -283,15 +286,15 @@ def task_5_6(multy, sum):
         y2 = x2_y2_z2[1]
         z2 = x2_y2_z2[2]
 
-        # x0 = float(top_array[i_0 - 1][1]) * multy + sum
-        # y0 = float(top_array[i_0 - 1][2]) * multy + sum
-        # z0 = float(top_array[i_0 - 1][3]) * multy + sum
-        # x1 = float(top_array[i_1 - 1][1]) * multy + sum + 1
-        # y1 = float(top_array[i_1 - 1][2]) * multy + sum + 1
-        # z1 = float(top_array[i_1 - 1][3]) * multy + sum
-        # x2 = float(top_array[i_2 - 1][1]) * multy + sum
-        # y2 = float(top_array[i_2 - 1][2]) * multy + sum
-        # z2 = float(top_array[i_2 - 1][3]) * multy + sum
+        # x0 = top_array[i_0 - 1][0] * multy + sum
+        # y0 = top_array[i_0 - 1][1] * multy + sum
+        # z0 = top_array[i_0 - 1][2] * multy + sum
+        # x1 = top_array[i_1 - 1][0] * multy + sum + 1
+        # y1 = top_array[i_1 - 1][1] * multy + sum + 1
+        # z1 = top_array[i_1 - 1][2] * multy + sum
+        # x2 = top_array[i_2 - 1][0] * multy + sum
+        # y2 = top_array[i_2 - 1][1] * multy + sum
+        # z2 = top_array[i_2 - 1][2] * multy + sum
         task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic)
         # task_9_print_triangle(y0, x0, z0, y1, x1, z1, y2, x2, z2, pic)
     pic.show_picture()
@@ -301,7 +304,7 @@ def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.02, ty=-0.025, tz=0
     u0 = pic.w // 2
     v0 = pic.h // 2
 
-    result = [float(item) for item in top_array]
+    result = top_array.copy()
     x_shift = result[0] + tx
     y_shift = result[1] + ty
     z_shift = result[2] + tz
@@ -345,7 +348,7 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             if np.all(lambdas >= 0):
                 z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
-                if x < pic.h and x > 0 and y < pic.w and y > 0:
+                if pic.h > x > 0 and pic.w > y > 0:
                     if z_val > pic.z_matrix[x][y]:
                         pic.z_matrix[x][y] = z_val
                         pic.set_pixel(x, y, color)
