@@ -393,6 +393,18 @@ def task_17(points):
     return rotated_points.T.tolist()
 
 
+def mult_vectors(vector1, vector2):
+    return vector1[0] * vector2[0] + vector1[1] * vector2[1] + vector1[2] * vector2[2]
+
+
+def get_vector_length(vector):
+    return np.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)
+
+
+def get_l(n, l_vector):
+    return mult_vectors(n, l_vector) / (get_vector_length(n) * get_vector_length(l_vector))
+
+
 if __name__ == '__main__':
     # task_1()
     # task_3()
