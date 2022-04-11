@@ -250,7 +250,7 @@ def task_5_6(multy, sum):
     #                            pic, colour, 1000)
 
     # отрисовка полигонов изображения
-    index=0
+    index = 0
     for i in polygon_map:
         i_0 = i[0] if i[0] > 0 else len(top_array) - 1 + i[0]  # первая вершина полигона
         i_1 = i[1] if i[1] > 0 else len(top_array) - 1 + i[1]  # вторая вершина полигона
@@ -299,7 +299,7 @@ def task_5_6(multy, sum):
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
         task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic, normals, index)
-        index+=1
+        index += 1
 
         # task_9_print_triangle(y0, x0, z0, y1, x1, z1, y2, x2, z2, pic)
     pic.show_picture()
@@ -346,15 +346,14 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, norm
     l1 = get_l(normals[index][1], v)
     l2 = get_l(normals[index][2], v)
 
-
     cos_alpha = (n @ v) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
     if cos_alpha > 0:
-     return
+        return
 
     color = Colour([255 * abs(cos_alpha), 0, 0])
 
     for x in range(round(xmin), round(xmax)):
-     for y in range(round(ymin), round(ymax)):
+        for y in range(round(ymin), round(ymax)):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             brightness_value = 255 * (lambdas[0] * l0 + lambdas[1] * l1 + lambdas[2] * l2)
             color = Colour([brightness_value, 0, 0])
