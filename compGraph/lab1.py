@@ -327,15 +327,15 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
 
 
 def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, normals, index):
-    xmin = float(min(x0, x1, x2))
-    ymin = float(min(y0, y1, y2))
-    xmax = float(max(x0, x1, x2))
-    ymax = float(max(y0, y1, y2))
+    x_min = float(min(x0, x1, x2))
+    y_min = float(min(y0, y1, y2))
+    x_max = float(max(x0, x1, x2))
+    y_max = float(max(y0, y1, y2))
 
-    # if (xmin < 0): xmin = 0
-    # if (ymin < 0): ymin = 0
-    # if (xmax > pic.h): xmax = pic.h
-    # if (ymax > pic.w): ymax = pic.w
+    # if (x_min < 0): x_min = 0
+    # if (y_min < 0): y_min = 0
+    # if (x_max > pic.h): x_max = pic.h
+    # if (y_max > pic.w): y_max = pic.w
 
     n = np.cross([x1 - x0, y1 - y0, z1 - z0],
                  [x1 - x2, y1 - y2, z1 - z2])
@@ -352,8 +352,8 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, norm
 
     color = Colour([255 * abs(cos_alpha), 0, 0])
 
-    for x in range(round(xmin), round(xmax)):
-        for y in range(round(ymin), round(ymax)):
+    for x in range(round(x_min), round(x_max)):
+        for y in range(round(y_min), round(y_max)):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             brightness_value = 255 * (lambdas[0] * l0 + lambdas[1] * l1 + lambdas[2] * l2)
             color = Colour([brightness_value, 0, 0])
