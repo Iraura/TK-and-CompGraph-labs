@@ -40,7 +40,7 @@ class Picture:
 
 
 # считывание вершин с obj файла
-def read_pixel_matrix_from_file(filename, letter):
+def read_pixel_matrix_from_file(filename, letter1, letter2):
     # открываем obj файл
     with open(filename, 'r') as f:
         s = f.read().split('\n')
@@ -48,7 +48,7 @@ def read_pixel_matrix_from_file(filename, letter):
 
     # считываем вершины, описанные структурой v x1 y1
     for i in s:
-        if len(i) != 0 and i[0] == letter and i[1] == ' ':
+        if len(i) != 0 and i[0] == letter1 and i[1] == letter2:
             source.append(i)
     workspace = list()
     for i in source:
@@ -56,6 +56,7 @@ def read_pixel_matrix_from_file(filename, letter):
         del e[0]
         result = [float(item) for item in e]
         workspace.append(result)
+    f.close()
     return workspace
 
 
@@ -79,7 +80,7 @@ def read_polygon_matrix_from_file(filename):
     # записть только первых значений из v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
     for i in workspace:
         result.append([int(i[1].split('/')[0]), int(i[2].split('/')[0]), int(i[3].split('/')[0])])
-
+    f.close()
     return result
 
 
@@ -236,7 +237,7 @@ def task_5_6(multy, sum):
     pic = Picture(1000, 1000, default_picture_colour)
 
     # массив вершин
-    top_array = read_pixel_matrix_from_file('rabbit.obj', "v")
+    top_array = read_pixel_matrix_from_file('rabbit.obj', "v", " ")
 
     # массив полигонов
     polygon_map = read_polygon_matrix_from_file('rabbit.obj')
@@ -336,7 +337,7 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture):
                  [x1 - x2, y1 - y2, z1 - z2])
 
     v = [0, 0, 1]
-    normals = read_pixel_matrix_from_file("rabbit.obj", "vn")
+    normals = read_pixel_matrix_from_file("rabbit.obj", "v", "n")
     l0 = get_l(normals[0], v)
     l1 = get_l(normals[1], v)
     l2 = get_l(normals[2], v)
