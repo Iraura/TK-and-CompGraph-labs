@@ -250,7 +250,7 @@ def task_5_6(multy, sum):
     #                            pic, colour, 1000)
 
     # отрисовка полигонов изображения
-    index = 0
+
     for i in polygon_map:
         i_0 = i[0] if i[0] > 0 else len(top_array) - 1 + i[0]  # первая вершина полигона
         i_1 = i[1] if i[1] > 0 else len(top_array) - 1 + i[1]  # вторая вершина полигона
@@ -298,8 +298,8 @@ def task_5_6(multy, sum):
         # y2 = top_array[i_2 - 1][1] * multy + sum
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
-        task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic, normals, index)
-        index += 1
+        task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic, normals, i_0-1, i_1-1, i_2-1)
+
 
         # task_9_print_triangle(y0, x0, z0, y1, x1, z1, y2, x2, z2, pic)
     pic.show_picture()
@@ -326,25 +326,25 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
     return np.array([lambda0, lambda1, lambda2])
 
 
-def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, normals, index):
-    x_min = float(min(x0, x1, x2))
-    y_min = float(min(y0, y1, y2))
-    x_max = float(max(x0, x1, x2))
-    y_max = float(max(y0, y1, y2))
+def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, normals, index1,index2,index3):
+    xmin = float(min(x0, x1, x2))
+    ymin = float(min(y0, y1, y2))
+    xmax = float(max(x0, x1, x2))
+    ymax = float(max(y0, y1, y2))
 
-    # if (x_min < 0): x_min = 0
-    # if (y_min < 0): y_min = 0
-    # if (x_max > pic.h): x_max = pic.h
-    # if (y_max > pic.w): y_max = pic.w
+    # if (xmin < 0): xmin = 0
+    # if (ymin < 0): ymin = 0
+    # if (xmax > pic.h): xmax = pic.h
+    # if (ymax > pic.w): ymax = pic.w
 
     n = np.cross([x1 - x0, y1 - y0, z1 - z0],
                  [x1 - x2, y1 - y2, z1 - z2])
 
     v = [0, 0, 1]
 
-    l0 = get_l(normals[index][0], v)
-    l1 = get_l(normals[index][1], v)
-    l2 = get_l(normals[index][2], v)
+    l0 = get_l(normals[index1], v)
+    l1 = get_l(normals[index2], v)
+    l2 = get_l(normals[index3], v)
 
     cos_alpha = (n @ v) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
     if cos_alpha > 0:
@@ -352,8 +352,8 @@ def task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic: Picture, norm
 
     color = Colour([255 * abs(cos_alpha), 0, 0])
 
-    for x in range(round(x_min), round(x_max)):
-        for y in range(round(y_min), round(y_max)):
+    for x in range(round(xmin), round(xmax)):
+        for y in range(round(ymin), round(ymax)):
             lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
             brightness_value = 255 * (lambdas[0] * l0 + lambdas[1] * l1 + lambdas[2] * l2)
             color = Colour([brightness_value, 0, 0])
