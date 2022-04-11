@@ -298,7 +298,7 @@ def task_5_6(multy, sum):
         # y2 = top_array[i_2 - 1][1] * multy + sum
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
-        task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic, normals, i_0, i_1, i_2)
+        task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, pic, normals, i_0 - 1, i_1 - 1, i_2 - 1)
 
         # task_9_print_triangle(y0, x0, z0, y1, x1, z1, y2, x2, z2, pic)
     pic.show_picture()
