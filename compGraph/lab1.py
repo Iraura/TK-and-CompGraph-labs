@@ -131,7 +131,7 @@ class Picture:
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
                 lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
                 brightness_value = 255 * (lambdas[0] * l0 + lambdas[1] * l1 + lambdas[2] * l2)
-                # color = Colour([brightness_value, 0, 0])
+                color = Colour([brightness_value, 0, 0])
                 if np.all(lambdas >= 0):
                     z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
                     if self.h > x >= 0 and self.w > y >= 0:
