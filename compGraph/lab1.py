@@ -23,7 +23,9 @@ class Picture:
         self.picture_array = np.zeros((h, w, 3), dtype=np.uint8)
         self.picture_colour = col
         self.clear()
-        self.z_matrix = np.zeros((h, w))
+        self.z_matrix = np.ones((h, w))
+        self.z_matrix.fill(np.inf)
+
 
     def create_from_array(self, array):
         self.picture_array = array
@@ -100,7 +102,7 @@ class Picture:
             self.set_pixel(x, y, self.picture_colour)
             x += 1
 
-    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3):
+    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3, color:Colour):
         xmin = float(min(x0, x1, x2))
         ymin = float(min(y0, y1, y2))
         xmax = float(max(x0, x1, x2))
@@ -111,21 +113,12 @@ class Picture:
         # if (xmax > pic.h): xmax = pic.h
         # if (ymax > pic.w): ymax = pic.w
 
-        n = np.cross([x1 - x0, y1 - y0, z1 - z0],
-                     [x1 - x2, y1 - y2, z1 - z2])
-
         v = [0, 0, 1]
         if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
             return
         l0 = get_l(normals[index1], v)
         l1 = get_l(normals[index2], v)
         l2 = get_l(normals[index3], v)
-
-        cos_alpha = (n @ v) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
-        if cos_alpha > 0:
-            return
-
-        color = Colour([255 * abs(cos_alpha), 0, 0])
 
         for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
@@ -135,7 +128,7 @@ class Picture:
                 if np.all(lambdas >= 0):
                     z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
                     if self.h > x >= 0 and self.w > y >= 0:
-                        if z_val >= self.z_matrix[x][y]:
+                        if z_val < self.z_matrix[x][y]:
                             self.z_matrix[x][y] = z_val
                             self.set_pixel(x, y, color)
                     else:
@@ -304,6 +297,10 @@ def task_5_6(multy, sum):
 
     # pic.print_points(top_array, multy, sum)
     # отрисовка полигонов изображения
+    index = 0
+    for i in normals:
+        normals[index] = task_17(i)
+        index += 1
 
     for i in polygon_map:
         i_0 = i[0] if i[0] > 0 else len(top_array) - 1 + i[0]  # первая вершина полигона
@@ -311,7 +308,15 @@ def task_5_6(multy, sum):
         i_2 = i[2] if i[2] > 0 else len(top_array) - 1 + i[2]  # третья вершина полигона
 
         # pic.print_sides(top_array, multy, sum, i_0, i_1, i_2)
+        n = np.cross([top_array[i_1-1][0] - top_array[i_0-1][0], top_array[i_1-1][1] - top_array[i_0-1][1], top_array[i_1-1][2] - top_array[i_0-1][2]],
+                     [top_array[i_1-1][0] - top_array[i_2-1][0], top_array[i_1-1][1] - top_array[i_2-1][1], top_array[i_1-1][2] - top_array[i_2-1][2]])
 
+        v = [0, 0, 1]
+        cos_alpha = (n @ v) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
+        # if cos_alpha > 0:
+        #     return
+
+        color = Colour([255 * abs(cos_alpha), 0, 0])
         x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1], multy, sum, pic))
         x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1], multy, sum, pic))
         x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1], multy, sum, pic))
@@ -336,7 +341,7 @@ def task_5_6(multy, sum):
         # y2 = top_array[i_2 - 1][1] * multy + sum
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
-        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, i_0, i_1, i_2)
+        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, i_0 - 1, i_1 - 1, i_2 - 1, color)
 
     pic.show_picture()
 
@@ -363,9 +368,9 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
 
 
 def task_17(points):
-    alpha = 0 * 180 / np.pi
-    betta = 0 * 180 / np.pi
-    gamma = 0 * 180 / np.pi
+    alpha = 0 / 180 * np.pi
+    betta = 0 / 180 * np.pi
+    gamma = 0 / 180 * np.pi
 
     cos_alpha = np.cos(alpha)
     cos_betta = np.cos(betta)
@@ -386,10 +391,10 @@ def task_17(points):
                                 [-sin_gamma, cos_gamma, 0],
                                 [0, 0, 1]])
 
-    first_matmul_xy = np.matmul(rotate_x_matrix, rotate_y_matrix)
-    R_matrix = np.matmul(first_matmul_xy, rotate_z_matrix)
+    first_matmul_xy = np.dot(rotate_x_matrix, rotate_y_matrix)
+    R_matrix = np.dot(first_matmul_xy, rotate_z_matrix)
 
-    rotated_points = np.matmul(R_matrix, points)
+    rotated_points = np.dot(R_matrix, points)
     return rotated_points.T.tolist()
 
 
