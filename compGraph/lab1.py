@@ -14,7 +14,7 @@ class Picture:
     h = 512
     w = 512
     picture_array = np.zeros((h, w, 3), dtype=np.uint8)
-    default_colour = Colour([0, 0, 0])
+    default_colour = Colour([128, 128, 128])
     picture_colour = Colour([0, 0, 0])
 
     def __init__(self, h, w, col: Colour):
@@ -22,14 +22,15 @@ class Picture:
         self.w = w
         self.picture_array = np.zeros((h, w, 3), dtype=np.uint8)
         self.picture_colour = col
+        self.clear()
         self.z_matrix = np.zeros((h, w))
 
     def create_from_array(self, array):
         self.picture_array = array
 
     def set_pixel(self, x, y, color: Colour):
-        if self.w > x > 0 and self.h > y > 0:
-            self.picture_array[int(y), int(x)] = color.colour_array
+        # if self.w > x > 0 and self.h > y > 0:
+        self.picture_array[int(y), int(x)] = color.colour_array
 
     def show_picture(self):
         img = Image.fromarray(self.picture_array, 'RGB')
@@ -40,6 +41,7 @@ class Picture:
 
     # 4-ый вариант отрисовки линий (алгоритм Брезенхема)
     def line_v_4(self, x1, y1, x0, y0, delts_t=0.0):
+        colour = Colour([255, 0, 0])
         sleep = False
         if abs(x0 - x1) < abs(y0 - y1):
             x0, y0 = y0, x0
@@ -58,9 +60,9 @@ class Picture:
 
         for x in range(int(x0), int(x1) + 1):
             if sleep:
-                self.set_pixel(y, x, self.picture_colour)
+                self.set_pixel(y, x, colour)
             else:
-                self.set_pixel(x, y, self.picture_colour)
+                self.set_pixel(x, y, colour)
             error += d_error
             if error > 0.5:
                 if y1 > y0:
@@ -125,15 +127,15 @@ class Picture:
 
         color = Colour([255 * abs(cos_alpha), 0, 0])
 
-        for x in range(round(xmin), round(xmax)):
-            for y in range(round(ymin), round(ymax)):
+        for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
+            for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
                 lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
                 brightness_value = 255 * (lambdas[0] * l0 + lambdas[1] * l1 + lambdas[2] * l2)
-                color = Colour([brightness_value, 0, 0])
+                # color = Colour([brightness_value, 0, 0])
                 if np.all(lambdas >= 0):
                     z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
-                    if self.h > x > 0 and self.w > y > 0:
-                        if z_val > self.z_matrix[x][y]:
+                    if self.h > x >= 0 and self.w > y >= 0:
+                        if z_val >= self.z_matrix[x][y]:
                             self.z_matrix[x][y] = z_val
                             self.set_pixel(x, y, color)
                     else:
