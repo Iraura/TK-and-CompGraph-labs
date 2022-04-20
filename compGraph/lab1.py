@@ -23,8 +23,7 @@ class Picture:
         self.picture_array = np.zeros((h, w, 3), dtype=np.uint8)
         self.picture_colour = col
         self.clear()
-        self.z_matrix = np.ones((h, w))
-        self.z_matrix.fill(np.inf)
+        self.z_matrix = np.zeros((h, w))
 
     def create_from_array(self, array):
         self.picture_array = array
@@ -101,7 +100,7 @@ class Picture:
             self.set_pixel(x, y, self.picture_colour)
             x += 1
 
-    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3, color: Colour):
+    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3, numberOfNormals):
         xmin = float(min(x0, x1, x2))
         ymin = float(min(y0, y1, y2))
         xmax = float(max(x0, x1, x2))
@@ -112,13 +111,17 @@ class Picture:
         # if (xmax > pic.h): xmax = pic.h
         # if (ymax > pic.w): ymax = pic.w
 
+
+
         v = [0, 0, 1]
         if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
             return
-        l0 = get_l(normals[index1], v)
-        l1 = get_l(normals[index2], v)
-        l2 = get_l(normals[index3], v)
+        l0 = get_l(normals[int(numberOfNormals[index1 - 1])], v)
+        l1 = get_l(normals[int(numberOfNormals[index2 - 1])], v)
+        l2 = get_l(normals[int(numberOfNormals[index3 - 1])], v)
 
+        count_plus = 0
+        count_minus = 0
         for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
                 lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
@@ -127,7 +130,7 @@ class Picture:
                 if np.all(lambdas >= 0):
                     z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
                     if self.h > x >= 0 and self.w > y >= 0:
-                        if z_val < self.z_matrix[x][y]:
+                        if z_val > self.z_matrix[x][y]:
                             self.z_matrix[x][y] = z_val
                             self.set_pixel(x, y, color)
                     else:
@@ -316,8 +319,8 @@ def task_5_6(multy, sum):
                      [top_array[i_1 - 1][0] - top_array[i_2 - 1][0], top_array[i_1 - 1][1] - top_array[i_2 - 1][1],
                       top_array[i_1 - 1][2] - top_array[i_2 - 1][2]])
 
-        v = [0, 0, 1]
-        cos_alpha = (n @ v) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
+        v = [0, 0, -1]
+        cos_alpha = np.dot(n, v) / np.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2])
         # if cos_alpha > 0:
         #     return
 
@@ -346,7 +349,7 @@ def task_5_6(multy, sum):
         # y2 = top_array[i_2 - 1][1] * multy + sum
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
-        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, i_0 - 1, i_1 - 1, i_2 - 1, color)
+        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, i[0], i[1], i[2], numberOfNormals)
 
     pic.show_picture()
 
@@ -391,15 +394,15 @@ def calculate_matrix_for_task_17():
 
     rotate_x_matrix = np.array([[1, 0, 0],
                                 [0, cos_alpha, sin_alpha],
-                                [0, -sin_alpha, cos_alpha]])
+                                [0, -sin_alpha, cos_alpha]]).reshape(3,3)
 
     rotate_y_matrix = np.array([[cos_betta, 0, sin_betta],
                                 [0, 1, 0],
-                                [-sin_betta, 0, cos_betta]])
+                                [-sin_betta, 0, cos_betta]]).reshape(3,3)
 
     rotate_z_matrix = np.array([[cos_gamma, sin_gamma, 0],
                                 [-sin_gamma, cos_gamma, 0],
-                                [0, 0, 1]])
+                                [0, 0, 1]]).reshape(3,3)
 
     first_matmul_xy = np.dot(rotate_x_matrix, rotate_y_matrix)
     R_matrix = np.dot(first_matmul_xy, rotate_z_matrix)
