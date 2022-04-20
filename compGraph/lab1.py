@@ -118,6 +118,7 @@ class Picture:
         cos_alpha = np.dot(n, l) / np.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2])
         if cos_alpha > 0:
             return
+        color = Colour([255 * abs(cos_alpha), 0, 0])
         v = [0, 1, 0]
         if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
             return
@@ -263,7 +264,6 @@ def task_1():
 
 def task_3():
     default_picture_colour = Colour([255, 255, 255])
-    colour = Colour([0, 0, 0])
     pic = Picture(400, 400, default_picture_colour)
 
     # task №3
@@ -348,20 +348,6 @@ def task_5_6(multy, sum):
         i_2 = i[2] if i[2] > 0 else len(top_array) - 1 + i[2]  # третья вершина полигона
 
         # pic.print_sides(top_array, multy, sum, i_0, i_1, i_2)
-        n = np.cross([top_array[i_1 - 1][0] - top_array[i_0 - 1][0], top_array[i_1 - 1][1] - top_array[i_0 - 1][1],
-                      top_array[i_1 - 1][2] - top_array[i_0 - 1][2]],
-                     [top_array[i_1 - 1][0] - top_array[i_2 - 1][0], top_array[i_1 - 1][1] - top_array[i_2 - 1][1],
-                      top_array[i_1 - 1][2] - top_array[i_2 - 1][2]])
-
-        v = [0, 0, -1]
-        cos_alpha = np.dot(n, v) / np.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2])
-        # if cos_alpha > 0:
-        #     return
-
-        color = Colour([255 * abs(cos_alpha), 0, 0])
-        # x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1], multy, sum, pic), R_matrix)
-        # x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1], multy, sum, pic), R_matrix)
-        # x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1], multy, sum, pic), R_matrix)
 
         x0_y0_z0 = top_array[i_0 - 1]
         x1_y1_z1 = top_array[i_1 - 1]
@@ -463,6 +449,4 @@ if __name__ == '__main__':
     #   task_1()
     # task_3()
     filename = 'fox.obj'
-    task_5_6(10, 10)  # troop   er
-# task_5_6(5, 500) # fox
-# task_5_6(100, 100)
+    task_5_6(10, 10)
