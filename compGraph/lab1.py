@@ -26,7 +26,6 @@ class Picture:
         self.z_matrix = np.ones((h, w))
         self.z_matrix.fill(np.inf)
 
-
     def create_from_array(self, array):
         self.picture_array = array
 
@@ -102,7 +101,7 @@ class Picture:
             self.set_pixel(x, y, self.picture_colour)
             x += 1
 
-    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3, color:Colour):
+    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3, color: Colour):
         xmin = float(min(x0, x1, x2))
         ymin = float(min(y0, y1, y2))
         xmax = float(max(x0, x1, x2))
@@ -195,7 +194,7 @@ def read_pixel_matrix_from_file(filename, letter1, letter2):
 
 
 # считывание полигонов с obj файла
-def read_polygon_matrix_from_file(filename):
+def read_polygon_matrix_from_file(filename,normals_indexes):
     # открываем obj файл
     with open(filename, 'r') as f:
         s = f.read().split('\n')
@@ -213,6 +212,7 @@ def read_polygon_matrix_from_file(filename):
 
     # записть только первых значений из v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
     for i in workspace:
+        normals_indexes.append(int(i[1].split('/')[2]))
         result.append([int(i[1].split('/')[0]), int(i[2].split('/')[0]), int(i[3].split('/')[0])])
     f.close()
     return result
@@ -293,13 +293,16 @@ def task_5_6(multy, sum):
     top_array = read_pixel_matrix_from_file('rabbit.obj', "v", " ")
     normals = read_pixel_matrix_from_file("rabbit.obj", "v", "n")
     # массив полигонов
-    polygon_map = read_polygon_matrix_from_file('rabbit.obj')
+    numberOfNormals = []
+    polygon_map = read_polygon_matrix_from_file('rabbit.obj',numberOfNormals)
+
+    R_matrix = calculate_matrix_for_task_17()
 
     # pic.print_points(top_array, multy, sum)
     # отрисовка полигонов изображения
     index = 0
     for i in normals:
-        normals[index] = task_17(i)
+        normals[index] = task_17(i, R_matrix)
         index += 1
 
     for i in polygon_map:
@@ -308,8 +311,10 @@ def task_5_6(multy, sum):
         i_2 = i[2] if i[2] > 0 else len(top_array) - 1 + i[2]  # третья вершина полигона
 
         # pic.print_sides(top_array, multy, sum, i_0, i_1, i_2)
-        n = np.cross([top_array[i_1-1][0] - top_array[i_0-1][0], top_array[i_1-1][1] - top_array[i_0-1][1], top_array[i_1-1][2] - top_array[i_0-1][2]],
-                     [top_array[i_1-1][0] - top_array[i_2-1][0], top_array[i_1-1][1] - top_array[i_2-1][1], top_array[i_1-1][2] - top_array[i_2-1][2]])
+        n = np.cross([top_array[i_1 - 1][0] - top_array[i_0 - 1][0], top_array[i_1 - 1][1] - top_array[i_0 - 1][1],
+                      top_array[i_1 - 1][2] - top_array[i_0 - 1][2]],
+                     [top_array[i_1 - 1][0] - top_array[i_2 - 1][0], top_array[i_1 - 1][1] - top_array[i_2 - 1][1],
+                      top_array[i_1 - 1][2] - top_array[i_2 - 1][2]])
 
         v = [0, 0, 1]
         cos_alpha = (n @ v) / np.sqrt(n[0] ** 2 + n[1] ** 2 + n[2] ** 2)
@@ -317,9 +322,9 @@ def task_5_6(multy, sum):
         #     return
 
         color = Colour([255 * abs(cos_alpha), 0, 0])
-        x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1], multy, sum, pic))
-        x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1], multy, sum, pic))
-        x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1], multy, sum, pic))
+        x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1], multy, sum, pic), R_matrix)
+        x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1], multy, sum, pic), R_matrix)
+        x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1], multy, sum, pic), R_matrix)
 
         x0 = x0_y0_z0[0]
         y0 = x0_y0_z0[1]
@@ -367,7 +372,12 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
     return np.array([lambda0, lambda1, lambda2])
 
 
-def task_17(points):
+def task_17(points, R_matrix):
+    rotated_points = np.dot(R_matrix, points)
+    return rotated_points.T.tolist()
+
+
+def calculate_matrix_for_task_17():
     alpha = 0 / 180 * np.pi
     betta = 0 / 180 * np.pi
     gamma = 0 / 180 * np.pi
@@ -393,9 +403,7 @@ def task_17(points):
 
     first_matmul_xy = np.dot(rotate_x_matrix, rotate_y_matrix)
     R_matrix = np.dot(first_matmul_xy, rotate_z_matrix)
-
-    rotated_points = np.dot(R_matrix, points)
-    return rotated_points.T.tolist()
+    return R_matrix
 
 
 def mult_vectors(vector1, vector2):
