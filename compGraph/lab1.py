@@ -100,7 +100,8 @@ class Picture:
             self.set_pixel(x, y, self.picture_colour)
             x += 1
 
-    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3, numberOfNormals):
+    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3,
+                              numberOfNormals):
         xmin = float(min(x0, x1, x2))
         ymin = float(min(y0, y1, y2))
         xmax = float(max(x0, x1, x2))
@@ -111,21 +112,23 @@ class Picture:
         # if (xmax > pic.h): xmax = pic.h
         # if (ymax > pic.w): ymax = pic.w
 
-
-
-        v = [0, 0, 1]
+        n = np.cross([x1 - x0, y1 - y0, z1 - z0],
+                     [x1 - x2, y1 - y2, z1 - z2])
+        l = [0, 0, 1]
+        cos_alpha = np.dot(n, l) / np.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2])
+        if cos_alpha > 0:
+            return
+        v = [0, 1, 0]
         if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
             return
-        l0 = get_l(normals[int(numberOfNormals[index1 - 1])], v)
-        l1 = get_l(normals[int(numberOfNormals[index2 - 1])], v)
-        l2 = get_l(normals[int(numberOfNormals[index3 - 1])], v)
+        l0 = get_l(normals[int(numberOfNormals[index1])], v)
+        l1 = get_l(normals[int(numberOfNormals[index2])], v)
+        l2 = get_l(normals[int(numberOfNormals[index3])], v)
 
-        count_plus = 0
-        count_minus = 0
         for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
                 lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
-                brightness_value = 255 * (lambdas[0] * l0 + lambdas[1] * l1 + lambdas[2] * l2)
+                brightness_value = 255 * (lambdas[0] * abs(l0) + lambdas[1] * abs(l1) + lambdas[2] * abs(l2))
                 color = Colour([brightness_value, 0, 0])
                 if np.all(lambdas >= 0):
                     z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
@@ -197,7 +200,7 @@ def read_pixel_matrix_from_file(filename, letter1, letter2):
 
 
 # считывание полигонов с obj файла
-def read_polygon_matrix_from_file(filename,normals_indexes):
+def read_polygon_matrix_from_file(filename, normals_indexes):
     # открываем obj файл
     with open(filename, 'r') as f:
         s = f.read().split('\n')
@@ -288,25 +291,56 @@ def task_3():
     pic.clear()
 
 
+def shiftPoints(points):
+    changePoints = points
+    minValueY = 0
+    minValueZ = 0
+    minValueX = 0
+    for i in range(len(points)):
+        if changePoints[i][1] < minValueY:
+            minValueY = changePoints[i][1]
+        if changePoints[i][2] < minValueZ:
+            minValueZ = changePoints[i][2]
+        if changePoints[i][0] < minValueX:
+            minValueX = changePoints[i][0]
+    for i in range(len(points)):
+        changePoints[i][1] -= minValueY
+        changePoints[i][2] -= minValueZ
+        changePoints[i][0] -= minValueX
+
+    for i in range(len(points)):
+        changePoints[i][1] = int(changePoints[i][1])
+        changePoints[i][2] = int(changePoints[i][2])
+        changePoints[i][0] = int(changePoints[i][0])
+    return changePoints
+
+
 def task_5_6(multy, sum):
     default_picture_colour = Colour([123, 0, 0])  # цвет фона
-    pic = Picture(1000, 1000, default_picture_colour)
+    pic = Picture(2000, 2000, default_picture_colour)
 
     # массив вершин
-    top_array = read_pixel_matrix_from_file('rabbit.obj', "v", " ")
-    normals = read_pixel_matrix_from_file("rabbit.obj", "v", "n")
+    top_array = read_pixel_matrix_from_file(filename, "v", " ")
+    normals = read_pixel_matrix_from_file(filename, "v", "n")
     # массив полигонов
     numberOfNormals = []
-    polygon_map = read_polygon_matrix_from_file('rabbit.obj',numberOfNormals)
+    polygon_map = read_polygon_matrix_from_file(filename, numberOfNormals)
 
     R_matrix = calculate_matrix_for_task_17()
 
     # pic.print_points(top_array, multy, sum)
     # отрисовка полигонов изображения
-    index = 0
-    for i in normals:
-        normals[index] = task_17(i, R_matrix)
-        index += 1
+    # index = 0
+    # for i in normals:
+    #     normals[index] = task_17(i, R_matrix)
+    #     index += 1
+
+    index_tops = 0
+    for i in top_array:
+        top_array[index_tops] = task_17(multilizate_coords(i, multy, sum, pic), R_matrix)
+        index_tops += 1
+
+    top_array = shiftPoints(top_array)
 
     for i in polygon_map:
         i_0 = i[0] if i[0] > 0 else len(top_array) - 1 + i[0]  # первая вершина полигона
@@ -325,9 +359,13 @@ def task_5_6(multy, sum):
         #     return
 
         color = Colour([255 * abs(cos_alpha), 0, 0])
-        x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1], multy, sum, pic), R_matrix)
-        x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1], multy, sum, pic), R_matrix)
-        x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1], multy, sum, pic), R_matrix)
+        # x0_y0_z0 = task_17(multilizate_coords(top_array[i_0 - 1], multy, sum, pic), R_matrix)
+        # x1_y1_z1 = task_17(multilizate_coords(top_array[i_1 - 1], multy, sum, pic), R_matrix)
+        # x2_y2_z2 = task_17(multilizate_coords(top_array[i_2 - 1], multy, sum, pic), R_matrix)
+
+        x0_y0_z0 = top_array[i_0 - 1]
+        x1_y1_z1 = top_array[i_1 - 1]
+        x2_y2_z2 = top_array[i_2 - 1]
 
         x0 = x0_y0_z0[0]
         y0 = x0_y0_z0[1]
@@ -354,9 +392,9 @@ def task_5_6(multy, sum):
     pic.show_picture()
 
 
-def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.02, ty=-0.025, tz=0.5):
-    u0 = pic.w // 2
-    v0 = pic.h // 2
+def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.005, ty=-0.045, tz=15):
+    u0 = 10  # pic.w // 2
+    v0 = 0  # pic.h // 2
 
     result = top_array.copy()
     x_shift = result[0] + tx
@@ -394,15 +432,15 @@ def calculate_matrix_for_task_17():
 
     rotate_x_matrix = np.array([[1, 0, 0],
                                 [0, cos_alpha, sin_alpha],
-                                [0, -sin_alpha, cos_alpha]]).reshape(3,3)
+                                [0, -sin_alpha, cos_alpha]]).reshape(3, 3)
 
     rotate_y_matrix = np.array([[cos_betta, 0, sin_betta],
                                 [0, 1, 0],
-                                [-sin_betta, 0, cos_betta]]).reshape(3,3)
+                                [-sin_betta, 0, cos_betta]]).reshape(3, 3)
 
     rotate_z_matrix = np.array([[cos_gamma, sin_gamma, 0],
                                 [-sin_gamma, cos_gamma, 0],
-                                [0, 0, 1]]).reshape(3,3)
+                                [0, 0, 1]]).reshape(3, 3)
 
     first_matmul_xy = np.dot(rotate_x_matrix, rotate_y_matrix)
     R_matrix = np.dot(first_matmul_xy, rotate_z_matrix)
@@ -424,6 +462,7 @@ def get_l(n, l_vector):
 if __name__ == '__main__':
     #   task_1()
     # task_3()
-    task_5_6(7500, 7500)  # troop   er
+    filename = 'fox.obj'
+    task_5_6(10, 10)  # troop   er
 # task_5_6(5, 500) # fox
 # task_5_6(100, 100)
