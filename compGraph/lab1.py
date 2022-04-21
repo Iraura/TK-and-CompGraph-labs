@@ -106,8 +106,7 @@ class Picture:
             x += 1
 
     # Отрисовка полигона, принимает вершины полигона, индексы нормалей, вектор нормалей
-    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3,
-                              numberOfNormals):
+    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, numberOfNormals):
         # Находим минимум и максимум по осям
         xmin = float(min(x0, x1, x2))
         ymin = float(min(y0, y1, y2))
@@ -389,8 +388,7 @@ def task_5_6(multy, sum):
         # y2 = top_array[i_2 - 1][1] * multy + sum
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
-        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, i[0], i[1], i[2],
-                                  numberOfNormals[index3])
+        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, numberOfNormals[index3])
         index3 += 1
 
     pic.show_picture()
