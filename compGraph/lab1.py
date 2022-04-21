@@ -119,7 +119,7 @@ class Picture:
         if cos_alpha > 0:
             return
         color = Colour([255 * abs(cos_alpha), 0, 0])
-        v = [0, 1, 0]
+        v = [0, 0, 1]
         if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
             return
         l0 = get_l(normals[int(numberOfNormals[index1])], v)
@@ -308,10 +308,6 @@ def shiftPoints(points):
         changePoints[i][2] -= minValueZ
         changePoints[i][0] -= minValueX
 
-    for i in range(len(points)):
-        changePoints[i][1] = int(changePoints[i][1])
-        changePoints[i][2] = int(changePoints[i][2])
-        changePoints[i][0] = int(changePoints[i][0])
     return changePoints
 
 
