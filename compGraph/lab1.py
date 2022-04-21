@@ -313,13 +313,13 @@ def shiftPoints(points):
 
 def task_5_6(multy, sum):
     default_picture_colour = Colour([123, 0, 0])  # цвет фона
-    pic = Picture(2000, 2000, default_picture_colour)
+    pic = Picture(1000, 1000, default_picture_colour)
 
     # массив вершин
     top_array = read_pixel_matrix_from_file(filename, "v", " ")
     normals = read_pixel_matrix_from_file(filename, "v", "n")
     # массив полигонов
-    numberOfNormals = [[]]
+    numberOfNormals = []
     polygon_map = read_polygon_matrix_from_file(filename, numberOfNormals)
 
     R_matrix = calculate_matrix_for_task_17()
@@ -377,9 +377,9 @@ def task_5_6(multy, sum):
     pic.show_picture()
 
 
-def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.005, ty=-0.045, tz=15):
-    u0 = 10  # pic.w // 2
-    v0 = 0  # pic.h // 2
+def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.020, ty=-0.025, tz=0.5):
+    u0 = pic.w // 2
+    v0 = pic.h // 2
 
     result = top_array.copy()
     x_shift = result[0] + tx
@@ -447,5 +447,5 @@ def get_l(n, l_vector):
 if __name__ == '__main__':
     #   task_1()
     # task_3()
-    filename = 'fox.obj'
-    task_5_6(10, 10)
+    filename = 'rabbit.obj'
+    task_5_6(7500, 7500)
