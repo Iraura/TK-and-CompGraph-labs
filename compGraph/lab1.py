@@ -34,7 +34,7 @@ class Picture:
     # Задание цвета конкретного пикселя изображения
     def set_pixel(self, x, y, color: Colour):
         # if self.w > x > 0 and self.h > y > 0:
-        self.picture_array[int(y), int(x)] = color.colour_array
+        self.picture_array[int(-y), int(-x)] = color.colour_array
 
     # Вывести изображение
     def show_picture(self):
@@ -106,7 +106,7 @@ class Picture:
             x += 1
 
     # Отрисовка полигона, принимает вершины полигона, индексы нормалей, вектор нормалей
-    def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, numberOfNormals):
+    def print_polygon(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, numberOfNormals):
         # Находим минимум и максимум по осям
         xmin = float(min(x0, x1, x2))
         ymin = float(min(y0, y1, y2))
@@ -125,7 +125,7 @@ class Picture:
             return
         color = Colour([255 * abs(cos_alpha), 0, 0])
         # Вектор направления света
-        v = [1, 0, 0]
+        v = [0, 0, 1]
 
         l0 = get_l(normals[int(numberOfNormals[0]) - 1], v)
         l1 = get_l(normals[int(numberOfNormals[1]) - 1], v)
@@ -135,12 +135,13 @@ class Picture:
         for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
                 # Переходим к барицентрическим координатам
-                lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
+                lambdas = get_baracentral_coords(x, y, x0, y0, x1, y1, x2, y2)
                 # Рассчет яркости пикселя
                 brightness_value = 255 * (lambdas[0] * abs(l0) + lambdas[1] * abs(l1) + lambdas[2] * abs(l2))
                 color = Colour([brightness_value, 0, 0])
                 # для того чтобы рисовать только внутренние пиксели
                 if np.all(lambdas >= 0):
+                    # находим z координату пикселя используя значения из барацентрических координат
                     z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
                     if self.h > x >= 0 and self.w > y >= 0:
                         if z_val > self.z_matrix[x][y]:
@@ -301,24 +302,24 @@ def task_3():
     pic.clear()
 
 
-def shiftPoints(points):
-    changePoints = points
-    minValueY = 0
-    minValueZ = 0
-    minValueX = 0
+def shift_points(points):
+    change_points = points
+    min_value_y = 0
+    min_value_z = 0
+    min_value_x = 0
     for i in range(len(points)):
-        if changePoints[i][1] < minValueY:
-            minValueY = changePoints[i][1]
-        if changePoints[i][2] < minValueZ:
-            minValueZ = changePoints[i][2]
-        if changePoints[i][0] < minValueX:
-            minValueX = changePoints[i][0]
+        if change_points[i][1] < min_value_y:
+            min_value_y = change_points[i][1]
+        if change_points[i][2] < min_value_z:
+            min_value_z = change_points[i][2]
+        if change_points[i][0] < min_value_x:
+            min_value_x = change_points[i][0]
     for i in range(len(points)):
-        changePoints[i][1] -= minValueY
-        changePoints[i][2] -= minValueZ
-        changePoints[i][0] -= minValueX
+        change_points[i][1] -= min_value_y
+        change_points[i][2] -= min_value_z
+        change_points[i][0] -= min_value_x
 
-    return changePoints
+    return change_points
 
 
 def task_5_6(multy, sum):
@@ -330,28 +331,28 @@ def task_5_6(multy, sum):
     # массив нормалей
     normals = read_pixel_matrix_from_file(filename, "v", "n")
     # массив индексов нормалей
-    numberOfNormals = []
+    number_of_normals = []
     # массив описания полигонов
-    polygon_map = read_polygon_matrix_from_file(filename, numberOfNormals)
+    polygon_map = read_polygon_matrix_from_file(filename, number_of_normals)
 
     # Получение матрицы преобразования координат для поворота модели
-    R_matrix = calculate_matrix_for_task_17()
+    r_matrix = calculate_matrix_for_rotate()
 
     # pic.print_points(top_array, multy, sum)
     # отрисовка полигонов изображения
     index = 0
     # Применение поворота для нормалей
     for i in normals:
-        normals[index] = task_17(i, R_matrix)
+        normals[index] = rotate_coords(i, r_matrix)
         index += 1
 
     index_tops = 0
     # Получаем экранные координаты с применением поворота модели
     for i in top_array:
-        top_array[index_tops] = task_17(multilizate_coords(i, multy, sum, pic), R_matrix)
+        top_array[index_tops] = rotate_coords(multilizate_coords(i, multy, sum, pic), r_matrix)
         index_tops += 1
 
-    top_array = shiftPoints(top_array)
+    top_array = shift_points(top_array)
 
     index3 = 0
     # Итерация по полигонам и дальнейшая их окрашивание
@@ -386,7 +387,7 @@ def task_5_6(multy, sum):
         # y2 = top_array[i_2 - 1][1] * multy + sum
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
-        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, numberOfNormals[index3])
+        pic.print_polygon(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, number_of_normals[index3])
         index3 += 1
 
     pic.show_picture()
@@ -408,7 +409,7 @@ def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.020, ty=-0.025, tz=
 
 
 # метод перехода к барицентрическим координатам
-def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
+def get_baracentral_coords(x, y, x0, y0, x1, y1, x2, y2):
     lambda0 = ((x1 - x2) * (y - y2) - (y1 - y2) * (x - x2)) / ((x1 - x2) * (y0 - y2) - (y1 - y2) * (x0 - x2))
     lambda1 = ((x2 - x0) * (y - y0) - (y2 - y0) * (x - x0)) / ((x2 - x0) * (y1 - y0) - (y2 - y0) * (x1 - x0))
     lambda2 = ((x0 - x1) * (y - y1) - (y0 - y1) * (x - x1)) / ((x0 - x1) * (y2 - y1) - (y0 - y1) * (x2 - x1))
@@ -416,13 +417,13 @@ def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
 
 
 # Получение координат к которым применен поворот
-def task_17(points, R_matrix):
-    rotated_points = np.dot(R_matrix, points)
+def rotate_coords(points, r_matrix):
+    rotated_points = np.dot(r_matrix, points)
     return rotated_points.T.tolist()
 
 
 # получение матрицы преобразование для поворота модели
-def calculate_matrix_for_task_17():
+def calculate_matrix_for_rotate():
     alpha = 0 / 180 * np.pi
     betta = 0 / 180 * np.pi
     gamma = 0 / 180 * np.pi
@@ -447,8 +448,8 @@ def calculate_matrix_for_task_17():
                                 [0, 0, 1]]).reshape(3, 3)
 
     first_matmul_xy = np.dot(rotate_x_matrix, rotate_y_matrix)
-    R_matrix = np.dot(first_matmul_xy, rotate_z_matrix)
-    return R_matrix
+    r_matrix = np.dot(first_matmul_xy, rotate_z_matrix)
+    return r_matrix
 
 
 def mult_vectors(vector1, vector2):
