@@ -9,29 +9,31 @@ class Colour:
     def __init__(self, colour_array):
         self.colour_array = colour_array
 
-
+# Класс изображения
 class Picture:
     h = 512
     w = 512
+
     picture_array = np.zeros((h, w, 3), dtype=np.uint8)
-    default_colour = Colour([128, 128, 128])
-    picture_colour = Colour([0, 0, 0])
+    default_colour = Colour([128, 128, 128])     # цвет фона
+    picture_colour = Colour([0, 0, 0]) #цвет изображения
 
     def __init__(self, h, w, col: Colour):
         self.h = h
         self.w = w
         self.picture_array = np.zeros((h, w, 3), dtype=np.uint8)
         self.picture_colour = col
-        self.clear()
-        self.z_matrix = np.zeros((h, w))
+        self.clear() # удаление изображения, остается фон
+        self.z_matrix = np.zeros((h, w)) # Матрица для проверки и дальйнешего удаления невидимых поверхностей
 
+    # Создание изображения на основе массива
     def create_from_array(self, array):
         self.picture_array = array
-
+    # Задание цвета конкретного пикселя изображения
     def set_pixel(self, x, y, color: Colour):
         # if self.w > x > 0 and self.h > y > 0:
         self.picture_array[int(y), int(x)] = color.colour_array
-
+    # Вывести изображение
     def show_picture(self):
         img = Image.fromarray(self.picture_array, 'RGB')
         img.show()
@@ -100,8 +102,10 @@ class Picture:
             self.set_pixel(x, y, self.picture_colour)
             x += 1
 
+    # Отрисовка полигона, принимает вершины полигона, индексы нормалей, вектор нормалей
     def task_9_print_triangle(self, x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, index1, index2, index3,
                               numberOfNormals):
+        #Находим минимум и максимум по осям
         xmin = float(min(x0, x1, x2))
         ymin = float(min(y0, y1, y2))
         xmax = float(max(x0, x1, x2))
@@ -111,24 +115,29 @@ class Picture:
         # if (ymin < 0): ymin = 0
         # if (xmax > pic.h): xmax = pic.h
         # if (ymax > pic.w): ymax = pic.w
-
+        #Декартово произведение получаем направление вектора к нормали
         n = np.cross([x1 - x0, y1 - y0, z1 - z0],
                      [x1 - x2, y1 - y2, z1 - z2])
+        #направление взгляда камеры
         l = [0, 0, 1]
+        # рассчет угла между направлением взгляда камеры и углом нормали
         cos_alpha = np.dot(n, l) / np.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2])
         if cos_alpha > 0:
             return
         color = Colour([255 * abs(cos_alpha), 0, 0])
+        #Вектор направления света
         v = [1, 0, 0]
-        if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
-            return
-        l0 = get_l(normals[int(numberOfNormals[0])], v)
-        l1 = get_l(normals[int(numberOfNormals[1])], v)
-        l2 = get_l(normals[int(numberOfNormals[2])], v)
 
+        l0 = get_l(normals[int(numberOfNormals[0])-1], v)
+        l1 = get_l(normals[int(numberOfNormals[1])-1], v)
+        l2 = get_l(normals[int(numberOfNormals[2])-1], v)
+
+        #Цикл расскрашивания пикселей
         for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
+                # Переходим к барицентрическим координатам
                 lambdas = task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2)
+                # Рассчет яркости пикселя
                 brightness_value = 255 * (lambdas[0] * abs(l0) + lambdas[1] * abs(l1) + lambdas[2] * abs(l2))
                 color = Colour([brightness_value, 0, 0])
                 if np.all(lambdas >= 0):
@@ -162,6 +171,7 @@ class Picture:
                           top_array[i - 1][0] * multy + sum,
                           top_array[i - 1][1] * multy + sum, 1000)
 
+    # Отрисовка ребер полигона по заданным индексам вершин
     def print_sides(self, top_array, multy, sum, i_0, i_1, i_2):
         # # первое ребро полигона (вершины 1 и 2)
         self.line_v_4(top_array[i_0 - 1][0] * multy + sum, top_array[i_0 - 1][1] * multy + sum,
@@ -312,26 +322,32 @@ def shiftPoints(points):
 
 
 def task_5_6(multy, sum):
+
     default_picture_colour = Colour([123, 0, 0])  # цвет фона
     pic = Picture(1000, 1000, default_picture_colour)
 
     # массив вершин
     top_array = read_pixel_matrix_from_file(filename, "v", " ")
+    # массив нормалей
     normals = read_pixel_matrix_from_file(filename, "v", "n")
-    # массив полигонов
+    # массив индексов нормалей
     numberOfNormals = []
+    # массив описания полигонов
     polygon_map = read_polygon_matrix_from_file(filename, numberOfNormals)
 
+    # Получение матрицы преобразования координат для поворота модели
     R_matrix = calculate_matrix_for_task_17()
 
     # pic.print_points(top_array, multy, sum)
     # отрисовка полигонов изображения
-    # index = 0
-    # for i in normals:
-    #     normals[index] = task_17(i, R_matrix)
-    #     index += 1
+    index = 0
+    #Применение поворота для нормалей
+    for i in normals:
+        normals[index] = task_17(i, R_matrix)
+        index += 1
 
     index_tops = 0
+    #Получаем экранные координаты с применением поворота модели
     for i in top_array:
         top_array[index_tops] = task_17(multilizate_coords(i, multy, sum, pic), R_matrix)
         index_tops += 1
@@ -339,6 +355,7 @@ def task_5_6(multy, sum):
     top_array = shiftPoints(top_array)
 
     index3 = 0
+    # Итерация по полигонам и дальнейшая их окрашивание
     for i in polygon_map:
         i_0 = i[0] if i[0] > 0 else len(top_array) - 1 + i[0]  # первая вершина полигона
         i_1 = i[1] if i[1] > 0 else len(top_array) - 1 + i[1]  # вторая вершина полигона
@@ -376,7 +393,7 @@ def task_5_6(multy, sum):
 
     pic.show_picture()
 
-
+# Метод перехода к экранным координатам с изменением масштаба и смещения центра изображения
 def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.020, ty=-0.025, tz=0.5):
     u0 = pic.w // 2
     v0 = pic.h // 2
@@ -390,19 +407,19 @@ def multilizate_coords(top_array, ax, ay, pic: Picture, tx=0.020, ty=-0.025, tz=
     result[2] = z_shift
     return result
 
-
+# метод перехода к барицентрическим координатам
 def task_8_bara_sentral_coords(x, y, x0, y0, x1, y1, x2, y2):
     lambda0 = ((x1 - x2) * (y - y2) - (y1 - y2) * (x - x2)) / ((x1 - x2) * (y0 - y2) - (y1 - y2) * (x0 - x2))
     lambda1 = ((x2 - x0) * (y - y0) - (y2 - y0) * (x - x0)) / ((x2 - x0) * (y1 - y0) - (y2 - y0) * (x1 - x0))
     lambda2 = ((x0 - x1) * (y - y1) - (y0 - y1) * (x - x1)) / ((x0 - x1) * (y2 - y1) - (y0 - y1) * (x2 - x1))
     return np.array([lambda0, lambda1, lambda2])
 
-
+# Получение координат к которым применен поворот
 def task_17(points, R_matrix):
     rotated_points = np.dot(R_matrix, points)
     return rotated_points.T.tolist()
 
-
+# получение матрицы преобразование для поворота модели
 def calculate_matrix_for_task_17():
     alpha = 0 / 180 * np.pi
     betta = 0 / 180 * np.pi
