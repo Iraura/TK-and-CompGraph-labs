@@ -120,6 +120,7 @@ class Picture:
         l = [0, 0, 1]
         # рассчет угла между направлением взгляда камеры и углом нормали
         cos_alpha = np.dot(n, l) / np.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2])
+        # таким образом отбрасываем нелицевые грани
         if cos_alpha > 0:
             return
         color = Colour([255 * abs(cos_alpha), 0, 0])
