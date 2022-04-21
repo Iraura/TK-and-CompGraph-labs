@@ -122,9 +122,9 @@ class Picture:
         v = [1, 0, 0]
         if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
             return
-        l0 = get_l(normals[int(numberOfNormals[0])], v)
-        l1 = get_l(normals[int(numberOfNormals[1])], v)
-        l2 = get_l(normals[int(numberOfNormals[2])], v)
+        l0 = get_l(normals[int(numberOfNormals[0]) - 1], v)
+        l1 = get_l(normals[int(numberOfNormals[1]) - 1], v)
+        l2 = get_l(normals[int(numberOfNormals[2]) - 1], v)
 
         for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
