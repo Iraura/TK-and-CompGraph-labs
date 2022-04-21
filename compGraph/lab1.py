@@ -113,10 +113,6 @@ class Picture:
         xmax = float(max(x0, x1, x2))
         ymax = float(max(y0, y1, y2))
 
-        # if (xmin < 0): xmin = 0
-        # if (ymin < 0): ymin = 0
-        # if (xmax > pic.h): xmax = pic.h
-        # if (ymax > pic.w): ymax = pic.w
         # Декартово произведение получаем направление вектора к нормали
         n = np.cross([x1 - x0, y1 - y0, z1 - z0],
                      [x1 - x2, y1 - y2, z1 - z2])
@@ -134,7 +130,7 @@ class Picture:
         l1 = get_l(normals[int(numberOfNormals[1]) - 1], v)
         l2 = get_l(normals[int(numberOfNormals[2]) - 1], v)
 
-        # Цикл расскрашивания пикселей
+        # Цикл расскрашивания пикселей (попиксельная отрисовка)
         for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
                 # Переходим к барицентрическим координатам
@@ -142,6 +138,7 @@ class Picture:
                 # Рассчет яркости пикселя
                 brightness_value = 255 * (lambdas[0] * abs(l0) + lambdas[1] * abs(l1) + lambdas[2] * abs(l2))
                 color = Colour([brightness_value, 0, 0])
+                # для того чтобы рисовать только внутренние пиксели
                 if np.all(lambdas >= 0):
                     z_val = lambdas[0] * z0 + lambdas[1] * z1 + lambdas[2] * z2
                     if self.h > x >= 0 and self.w > y >= 0:
