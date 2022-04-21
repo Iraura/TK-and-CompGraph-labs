@@ -119,12 +119,12 @@ class Picture:
         if cos_alpha > 0:
             return
         color = Colour([255 * abs(cos_alpha), 0, 0])
-        v = [0, 0, 1]
+        v = [1, 0, 0]
         if (index1 >= len(normals) or index2 >= len(normals) or index3 >= len(normals)):
             return
-        l0 = get_l(normals[int(numberOfNormals[index1])], v)
-        l1 = get_l(normals[int(numberOfNormals[index2])], v)
-        l2 = get_l(normals[int(numberOfNormals[index3])], v)
+        l0 = get_l(normals[int(numberOfNormals[0])], v)
+        l1 = get_l(normals[int(numberOfNormals[1])], v)
+        l2 = get_l(normals[int(numberOfNormals[2])], v)
 
         for x in range(int(np.around(xmin)), int(np.around(xmax)) + 1):
             for y in range(int(np.around(ymin)), int(np.around(ymax) + 1)):
@@ -219,7 +219,7 @@ def read_polygon_matrix_from_file(filename, normals_indexes):
 
     # записть только первых значений из v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3
     for i in workspace:
-        normals_indexes.append(int(i[1].split('/')[2]))
+        normals_indexes.append([int(i[1].split('/')[2]), int(i[2].split('/')[2]), int(i[3].split('/')[2])])
         result.append([int(i[1].split('/')[0]), int(i[2].split('/')[0]), int(i[3].split('/')[0])])
     f.close()
     return result
@@ -319,7 +319,7 @@ def task_5_6(multy, sum):
     top_array = read_pixel_matrix_from_file(filename, "v", " ")
     normals = read_pixel_matrix_from_file(filename, "v", "n")
     # массив полигонов
-    numberOfNormals = []
+    numberOfNormals = [[]]
     polygon_map = read_polygon_matrix_from_file(filename, numberOfNormals)
 
     R_matrix = calculate_matrix_for_task_17()
@@ -338,6 +338,7 @@ def task_5_6(multy, sum):
 
     top_array = shiftPoints(top_array)
 
+    index3 = 0
     for i in polygon_map:
         i_0 = i[0] if i[0] > 0 else len(top_array) - 1 + i[0]  # первая вершина полигона
         i_1 = i[1] if i[1] > 0 else len(top_array) - 1 + i[1]  # вторая вершина полигона
@@ -369,7 +370,9 @@ def task_5_6(multy, sum):
         # y2 = top_array[i_2 - 1][1] * multy + sum
         # z2 = top_array[i_2 - 1][2] * multy + sum
 
-        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, i[0], i[1], i[2], numberOfNormals)
+        pic.task_9_print_triangle(x0, y0, z0, x1, y1, z1, x2, y2, z2, normals, i[0], i[1], i[2],
+                                  numberOfNormals[index3])
+        index3 += 1
 
     pic.show_picture()
 
